@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "ATLAS_URI": "@atlas_uri"
+    }
+  }
+}
