@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
-import ApexChart from 'react-apexcharts'
+// import ApexChart from 'react-apexcharts'
 import { format } from 'date-fns'
+import Loadable from '@loadable/component'
+
 
 import { abbrNumber, formatNumber } from '../../utils'
+
+const ApexChart = Loadable(() => import('../../../node_modules/react-apexcharts/src/react-apexcharts'))
 
 const ChartWrapper = styled(ApexChart)`
   .apexcharts-tooltip {
