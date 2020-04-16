@@ -1,7 +1,9 @@
 const path = require('path')
 const isNull = require('lodash/isNull')
 const isToday = require('date-fns/isToday')
+const format = require('date-fns/format')
 const kebabCase = require('lodash/kebabCase')
+const chalk = require('chalk')
 
 const { Country } = require('./src/api/db')
 const { get } = require('./src/api/get')
@@ -11,8 +13,8 @@ exports.onPreInit = async () => {
     ...(await get('https://corona.lmao.ninja/countries')),
     {
       ...(await get('https://corona.lmao.ninja/all')),
-      country: 'all',
-      countryInfo: { iso2: 'all' }
+      country: 'worldwide',
+      countryInfo: { iso2: 'worldwide' }
     }
   ]
 
@@ -65,6 +67,10 @@ exports.onPreInit = async () => {
         }
       ]
     })
+
+    console.log(`New record updated: \
+      ${ chalk.green(countryName) }, \
+      at ${ chalk.cyan(format(new Date(cases), 'eeee eo, hh:mm:ss')) }`)
   })
 }
 

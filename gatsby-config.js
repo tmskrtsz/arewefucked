@@ -33,7 +33,7 @@ module.exports = {
       resolve: 'gatsby-plugin-web-font-loader',
       options: {
         google: {
-          families: ['Hind:400,700']
+          families: ['Hind:400,600,700']
         }
       }
     },
