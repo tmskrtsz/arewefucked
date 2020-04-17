@@ -10,9 +10,9 @@ const { get } = require('./src/api/get')
 
 exports.onPreInit = async () => {
   const data = [
-    ...(await get('https://corona.lmao.ninja/countries')),
+    ...(await get('https://corona.lmao.ninja/v2/countries')),
     {
-      ...(await get('https://corona.lmao.ninja/all')),
+      ...(await get('https://corona.lmao.ninja/v2/all')),
       country: 'worldwide',
       countryInfo: { iso2: 'worldwide' }
     }

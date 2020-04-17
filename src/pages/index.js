@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 
 import { Layout } from '../templates'
-import { Hero, Container, Flex, Box, Label, Heading, Chart, Button, Secondary } from '../components'
+import { Hero, Container, Flex, Box, Label, Heading, Chart, Button, Secondary, Table } from '../components'
 import { formatNumber, percentageChange } from '../utils'
 
 export default () => {
+  const [top, setTop] = useState([])
   const [activeSet, setActiveSet] = useState('cases')
-  const { mongodbCovidCountries: data } = useStaticQuery(query)
+  const { mongodbCovidCountries: data, all } = useStaticQuery(query)
   const { stats } = data
 
   const last = stats[stats.length - 1]
@@ -20,6 +21,19 @@ export default () => {
     'recovered'
   ]
 
+  useEffect(() => {
+    setTop(all.nodes.map(entry => ({
+      name: entry.name,
+      stats: entry.stats.pop(),
+      flag: entry.metadata && entry.metadata.flag
+    }))
+      .sort((a, b) => a.stats && a.stats.cases < b.stats && b.stats.cases)
+      .filter(entry => entry.name !== 'worldwide')
+      .slice(0, 20)
+    )
+  }, [all])
+
+  console.log(stats)
   return (
     <Layout>
       <Hero>
@@ -127,6 +141,25 @@ export default () => {
           <Chart data={stats} dataSet={activeSet} />
         </Box>
       </Flex>
+      <Flex flexWrap="wrap" flexDirection="column">
+        <Flex alignItems="center">
+          <Heading as="h3">Top Statistics</Heading>
+          <Heading
+            as="span"
+            css={`
+            font-size: 2rem;
+            margin-left: 0.5em;
+            opacity: 0.4;
+          `}
+          >
+            (30 Days)
+          </Heading>
+        </Flex>
+        <Table
+          header={['Country', 'Cases', 'Deaths', 'Critical', 'Recovered']}
+          items={top}
+        />
+      </Flex>
     </Layout>
   )
 }
@@ -150,6 +183,21 @@ export const query = graphql`
       testsPerOneMillion
       todayCases
       todayDeaths
+    }
+  }
+
+  all: allMongodbCovidCountries {
+    nodes {
+      name
+      metadata {
+        flag
+      }
+      stats {
+        cases
+        deaths
+        critical
+        recovered
+      }
     }
   }
 }`

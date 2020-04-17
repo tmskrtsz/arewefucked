@@ -1,12 +1,21 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+function buttonStyles () {
+  return css`
+    font-size: 1.7rem;
+    cursor: pointer;
+    padding: 0.3em 0.5em;
+    border-radius: ${ ({ theme }) => theme.radii.sm };
+    appearance: none;
+    border: 0;
+    `
+}
 
 const Button = styled.button`
-  appearance: none;
+  ${ buttonStyles };
   background-color: ${ ({ theme }) => theme.color.blue[0] };
-  border: 0;
   color: ${ ({ theme }) => theme.text.color };
-  font-size: 1.7rem;
-  cursor: pointer;
+  border: 2px solid ${ ({ theme }) => theme.color.blue[0] };
 `
 
-export default Button
+export { Button as default, buttonStyles }

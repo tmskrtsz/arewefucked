@@ -1,12 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { graphql } from 'gatsby'
+
+import Layout from './layout'
 
 const Page = ({ data }) => {
   const { mongodbCovidCountries: res } = data
 
   return (
-    <h1>{res.name}</h1>
+    <Layout>
+      <h1>{res.name}</h1>
+    </Layout>
   )
 }
 
@@ -65,4 +68,5 @@ Page.propTypes = {
     })
   }).isRequired
 }
+
 export default Page

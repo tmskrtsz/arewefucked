@@ -2,13 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Wrapper, Header } from '../components'
+import StyledProvider from '../theme/Provider'
 
 const Layout = ({ children }) => {
   return (
-    <Wrapper>
-      <Header />
-      {children}
-    </Wrapper>
+    <StyledProvider>
+      <Wrapper>
+        <Header />
+        {children}
+      </Wrapper>
+    </StyledProvider>
   )
 }
 
