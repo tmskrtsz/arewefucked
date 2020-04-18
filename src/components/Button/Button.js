@@ -8,6 +8,7 @@ function buttonStyles () {
     border-radius: ${ ({ theme }) => theme.radii.sm };
     appearance: none;
     border: 0;
+    text-transform: capitalize;
     `
 }
 

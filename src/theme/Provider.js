@@ -34,14 +34,17 @@ const Global = createGlobalStyle`
 
   h4 {
     font-size: 2.7rem;
+    font-weight: 400;
   }
 
   h5 {
     font-size: 2.2rem;
+    font-weight: 400;
   }
 
   h6 {
     font-size: 1.7rem;
+    font-weight: 400;
   }
 `
 

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
+import orderBy from 'lodash/orderBy'
 
 import { Layout } from '../templates'
 import { Hero, Container, Flex, Box, Label, Heading, Chart, Button, Secondary, Table } from '../components'
 import { formatNumber, percentageChange } from '../utils'
 
 export default () => {
-  const [top, setTop] = useState([])
   const [activeSet, setActiveSet] = useState('cases')
+  const [change, setChange] = useState({})
   const { mongodbCovidCountries: data, all } = useStaticQuery(query)
   const { stats } = data
 
@@ -21,23 +22,29 @@ export default () => {
     'recovered'
   ]
 
-  useEffect(() => {
-    setTop(all.nodes.map(entry => ({
+  const top = useCallback(() => {
+    const extract = all.nodes.map(entry => ({
       name: entry.name,
       stats: entry.stats.pop(),
       flag: entry.metadata && entry.metadata.flag
     }))
-      .sort((a, b) => a.stats && a.stats.cases < b.stats && b.stats.cases)
-      .filter(entry => entry.name !== 'worldwide')
-      .slice(0, 20)
-    )
+      .filter(picsa => picsa.stats && picsa.name !== 'worldwide')
+    return orderBy(extract, ['stats.cases'], ['desc']).slice(0, 20)
   }, [all])
 
-  console.log(stats)
+  useEffect(() => {
+    setChange({
+      cases: percentageChange(last.cases, beforeLast.cases),
+      deaths: percentageChange(last.deaths, beforeLast.deaths),
+      critical: percentageChange(last.critical, beforeLast.critical),
+      recovered: percentageChange(last.recovered, beforeLast.recovered)
+    })
+  }, [last, beforeLast])
+
   return (
     <Layout>
       <Hero>
-        <h4>25% increase in world cases</h4>
+        <h4>{change.cases} increase in world cases</h4>
         <h1>Yes, We’re Fucked</h1>
         <h3>Stay Home</h3>
       </Hero>
@@ -58,7 +65,7 @@ export default () => {
                 <Heading as="h2">{formatNumber(last.cases)}</Heading>
               </Box>
               <Box>
-                <span>{percentageChange(last.cases, beforeLast.cases)}</span>
+                <span>{change.cases}</span>
               </Box>
             </Flex>
           </Container>
@@ -76,7 +83,7 @@ export default () => {
               flexDirection="column"
             >
               <Heading as="h2">{formatNumber(last.deaths)}</Heading>
-              <span>{percentageChange(last.deaths, beforeLast.deaths)}</span>
+              <span>{change.deaths}</span>
             </Flex>
           </Container>
         </Box>
@@ -93,7 +100,7 @@ export default () => {
               flexDirection="column"
             >
               <Heading as="h2">{formatNumber(last.critical)}</Heading>
-              <span>{percentageChange(last.critical, beforeLast.critical)}</span>
+              <span>{change.critical}</span>
             </Flex>
           </Container>
         </Box>
@@ -110,40 +117,50 @@ export default () => {
               flexDirection="column"
             >
               <Heading as="h2">{formatNumber(last.recovered)}</Heading>
-              <span>{percentageChange(last.recovered, beforeLast.recovered)}</span>
+              <span>{change.recovered}</span>
             </Flex>
           </Container>
         </Box>
       </Flex>
       <Flex my={4}>
         <Box width={1}>
-          <div>
+          <Flex>
             {dataSets.map(dataSet => (
               dataSet === activeSet
                 ? (
-                  <Button
-                    type="button"
-                    onClick={() => setActiveSet(dataSet)}
+                  <Box
+                    key={dataSet}
+                    mr={2}
                   >
-                    {dataSet}
-                  </Button>
+                    <Button
+                      type="button"
+                      onClick={() => setActiveSet(dataSet)}
+                    >
+                      {dataSet}
+                    </Button>
+                  </Box>
                 )
                 : (
-                  <Secondary
-                    type="button"
-                    onClick={() => setActiveSet(dataSet)}
+                  <Box
+                    key={dataSet}
+                    mr={2}
                   >
-                    {dataSet}
-                  </Secondary>
+                    <Secondary
+                      type="button"
+                      onClick={() => setActiveSet(dataSet)}
+                    >
+                      {dataSet}
+                    </Secondary>
+                  </Box>
                 )
             ))}
-          </div>
+          </Flex>
           <Chart data={stats} dataSet={activeSet} />
         </Box>
       </Flex>
       <Flex flexWrap="wrap" flexDirection="column">
         <Flex alignItems="center">
-          <Heading as="h3">Top Statistics</Heading>
+          <Heading as="h3">Worldwide Statistics</Heading>
           <Heading
             as="span"
             css={`
@@ -152,12 +169,12 @@ export default () => {
             opacity: 0.4;
           `}
           >
-            (30 Days)
+            (24 Hours)
           </Heading>
         </Flex>
         <Table
           header={['Country', 'Cases', 'Deaths', 'Critical', 'Recovered']}
-          items={top}
+          items={top()}
         />
       </Flex>
     </Layout>

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
 
-import { Flex, Box, Button } from '..'
+import { Flex, Box, Secondary } from '..'
 import { formatNumber } from '../../utils'
 
 const TableHeader = styled(Flex)`
@@ -22,6 +22,10 @@ const TableRow = styled(Flex)`
   color: ${ ({ theme }) => theme.text.color };
   position: relative;
 
+  :hover {
+    background-color: ${ ({ theme }) => theme.color.grey[2] };
+  }
+
   img {
     max-width: 32px;
     border-radius: 2px;
@@ -34,22 +38,12 @@ const TableRow = styled(Flex)`
       margin-left: 1em;
     }
   }
-
-  ${ Button } {
-    opacity: 0;
-  }
-
-  :hover {
-    ${Button} {
-      opacity: 1;
-    }
-  }
 `
 
 const Table = ({ header, items }) => {
   return (
     <>
-      <TableHeader py={2}>
+      <TableHeader py={2} px={3}>
         {header.map(item => (
           <Box
             key={item}
@@ -64,7 +58,7 @@ const Table = ({ header, items }) => {
           <TableRow
             key={entry.name}
             py={3}
-            my={2}
+            px={3}
             alignItems="center"
           >
             <Box width={[1 / 5]}>
@@ -85,11 +79,11 @@ const Table = ({ header, items }) => {
               {formatNumber(entry.stats.critical)}
             </Box>
             <Box width={[1 / 5]}>
-              <Flex justifyContent="space-between">
+              <Flex justifyContent="space-between" alignItems="center">
                 {formatNumber(entry.stats.recovered)}
-                <Button as={Link} to={`/${entry.name.toLowerCase()}`}>
-                  Explore
-                </Button>
+                <Secondary as={Link} to={`/${entry.name.toLowerCase()}`}>
+                  More
+                </Secondary>
               </Flex>
             </Box>
           </TableRow>
