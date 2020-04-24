@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import orderBy from 'lodash/orderBy'
 
-import { Layout } from '../templates'
 import { Hero, Container, Flex, Box, Label, Heading, Chart, Button, Secondary, Table } from '../components'
 import { formatNumber, percentageChange } from '../utils'
 
 export default () => {
   const [activeSet, setActiveSet] = useState('cases')
   const [change, setChange] = useState({})
-  const { mongodbCovidCountries: data, all } = useStaticQuery(query)
+  const {
+    mongodbCovidCountries: data,
+    allTop20: { nodes: top20 }
+  } = useStaticQuery(query)
   const { stats } = data
 
   const last = stats[stats.length - 1]
@@ -22,16 +23,6 @@ export default () => {
     'recovered'
   ]
 
-  const top = useCallback(() => {
-    const extract = all.nodes.map(entry => ({
-      name: entry.name,
-      stats: entry.stats.pop(),
-      flag: entry.metadata && entry.metadata.flag
-    }))
-      .filter(picsa => picsa.stats && picsa.name !== 'worldwide')
-    return orderBy(extract, ['stats.cases'], ['desc']).slice(0, 20)
-  }, [all])
-
   useEffect(() => {
     setChange({
       cases: percentageChange(last.cases, beforeLast.cases),
@@ -42,7 +33,7 @@ export default () => {
   }, [last, beforeLast])
 
   return (
-    <Layout>
+    <>
       <Hero>
         <h4>{change.cases} increase in world cases</h4>
         <h1>Yes, We’re Fucked</h1>
@@ -174,10 +165,10 @@ export default () => {
         </Flex>
         <Table
           header={['Country', 'Cases', 'Deaths', 'Critical', 'Recovered']}
-          items={top()}
+          items={top20[0].countries}
         />
       </Flex>
-    </Layout>
+    </>
   )
 }
 
@@ -203,17 +194,17 @@ export const query = graphql`
     }
   }
 
-  all: allMongodbCovidCountries {
+  allTop20 {
     nodes {
-      name
-      metadata {
-        flag
-      }
-      stats {
-        cases
-        deaths
-        critical
-        recovered
+      countries {
+        iso
+        name
+        stats {
+          cases
+          critical
+          deaths
+          recovered
+        }
       }
     }
   }

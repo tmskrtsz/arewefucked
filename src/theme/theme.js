@@ -6,7 +6,7 @@ export default {
   },
   text: {
     color: '#f5f5f5',
-    font: '"Hind", sans-serif',
+    font: '"Manrope", sans-serif',
     size: {
       body: '1.4rem'
     }

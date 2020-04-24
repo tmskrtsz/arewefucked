@@ -64,7 +64,10 @@ const Table = ({ header, items }) => {
             <Box width={[1 / 5]}>
               <Link to={`/${entry.name.toLowerCase()}`}>
                 <Flex alignItems="center">
-                  <img src={entry.flag} alt={`Flag of ${entry.name}`} />
+                  <img
+                    src={`https://www.countryflags.io/${ entry.iso.toLowerCase() }/shiny/64.png`}
+                    alt={`Flag of ${entry.name}`}
+                  />
                   <strong>{entry.name}</strong>
                 </Flex>
               </Link>

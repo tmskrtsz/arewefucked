@@ -4,6 +4,7 @@ const isToday = require('date-fns/isToday')
 const format = require('date-fns/format')
 const kebabCase = require('lodash/kebabCase')
 const chalk = require('chalk')
+const orderBy = require('lodash/orderBy')
 
 const { Country } = require('./src/api/db')
 const { get } = require('./src/api/get')
@@ -22,7 +23,7 @@ exports.onPreInit = async () => {
     // Pull the data out
     const {
       country: countryName,
-      countryInfo: { iso2 },
+      countryInfo: { iso2, flag },
       cases,
       todayCases,
       deaths,
@@ -70,8 +71,47 @@ exports.onPreInit = async () => {
 
     console.log(`New record updated: \
       ${ chalk.green(countryName) }, \
-      at ${ chalk.cyan(format(new Date(cases), 'eeee eo, hh:mm:ss')) }`)
+      at ${ chalk.cyan(format(new Date(updated), 'eeee do, hh:mm:ss')) }`)
   })
+}
+
+exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => {
+  const { createNode } = actions
+
+  const all = await get('https://corona.lmao.ninja/v2/countries')
+
+  const formatted = all.map(entry => ({
+    name: entry.country,
+    stats: {
+      cases: entry.cases,
+      deaths: entry.deaths,
+      critical: entry.critical,
+      recovered: entry.recovered,
+    },
+    iso: entry.countryInfo.iso2
+      ? entry.countryInfo.iso2.toLowerCase()
+      : entry.countryInfo.iso2
+  }))
+    .filter(entity => !isNull(entity.iso))
+
+  const top20 = {
+    countries: orderBy(formatted, ['stats.cases'], ['desc']).slice(0, 20)
+  }
+
+  const nodeMeta = {
+    id: createNodeId('top20'),
+    parent: null,
+    children: [],
+    internal: {
+      type: 'Top20',
+      mediaType: 'application/javascript',
+      content: JSON.stringify(top20),
+      contentDigest: createContentDigest(top20)
+    }
+  }
+
+  const node = { ...top20, ...nodeMeta }
+  createNode(node)
 }
 
 exports.createPages = async ({ graphql, actions, reporter }) => {

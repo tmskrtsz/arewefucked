@@ -84,6 +84,7 @@ const Chart = ({ data, dataSet }) => {
         borderColor: theme.color.grey[3],
       },
       xaxis: {
+        tickAmount: 5,
         categories: data.map(entry => format(entry.updated, 'MMMM, do')),
         axisBorder: {
           show: false
@@ -96,7 +97,7 @@ const Chart = ({ data, dataSet }) => {
           style: {
             fontSize: '14px',
             colors: theme.color.grey[4],
-            fontFamily: 'Hind, sans-serif',
+            fontFamily: 'Manrope, sans-serif',
             fontWeight: '600'
           },
         },
@@ -121,7 +122,7 @@ const Chart = ({ data, dataSet }) => {
           formatter: val => abbrNumber(val),
           style: {
             fontSize: '14px',
-            fontFamily: 'Hind, sans-serif',
+            fontFamily: 'Manrope, sans-serif',
             fontWeight: 600,
             colors: theme.color.grey[4],
           },
