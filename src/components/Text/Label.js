@@ -6,8 +6,6 @@ const Label = styled.span`
   padding: 1.2em 0;
   display: block;
   text-align: center;
-  background-color: ${ ({ theme }) => theme.color.grey[3] };
-  border-radius: 0 0 12px 12px;
 `
 
 export default Label

@@ -23,7 +23,7 @@ exports.onPreInit = async () => {
     // Pull the data out
     const {
       country: countryName,
-      countryInfo: { iso2, flag },
+      countryInfo: { iso2 },
       cases,
       todayCases,
       deaths,
@@ -38,12 +38,44 @@ exports.onPreInit = async () => {
 
     const countryNameISO = !isNull(iso2) && iso2.trim()
 
-    if (!countryNameISO) return
+    if (!countryNameISO || !countryName) return
 
     // Get data from mongo
     const res = await Country.findOne({
       name: countryName
     })
+
+    if (!res) {
+      console.log(`No data returned for ${ countryName }. \ Creating new entry.`)
+
+      const entry = new Country({
+        name: countryName,
+        stats: [{
+          cases,
+          todayCases,
+          deaths,
+          todayDeaths,
+          recovered,
+          active,
+          critical,
+          casesPerOneMillion,
+          deathsPerOneMillion,
+          updated
+        }],
+        metadata: {
+          iso: countryNameISO
+        }
+      })
+
+      entry.save(err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log(`Created new entry for ${ countryName }`)
+      })
+      return
+    }
 
     const lastEntry = res.stats[res.stats.length - 1]
 

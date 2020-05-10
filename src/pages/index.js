@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 
-import { Hero, Container, Flex, Box, Label, Heading, Chart, Button, Secondary, Table } from '../components'
+import {
+  Hero,
+  Container,
+  Flex,
+  Box,
+  Label,
+  Heading,
+  Chart,
+  Button,
+  Secondary,
+  Table,
+  StatsBox
+} from '../components'
 import { formatNumber, percentageChange } from '../utils'
+
+import casesIcon from '../images/cases.svg'
+import deathsIcon from '../images/deaths.svg'
+import criticalIcon from '../images/critical.svg'
+import recoveredIcon from '../images/recovered.svg'
 
 export default () => {
   const [activeSet, setActiveSet] = useState('cases')
@@ -39,78 +56,62 @@ export default () => {
         <h1>Yes, We’re Fucked</h1>
         <h3>Stay Home</h3>
       </Hero>
+      <Flex alignItems="center">
+        <Heading as="h3">Total Statistics</Heading>
+        <Heading as="span" muted>(Last 30 Days)</Heading>
+      </Flex>
       <Flex flexWrap="wrap" mx={-3}>
         <Box width={[1 / 4]}>
-          <Container
+          <StatsBox
+            icon={casesIcon}
+            label="Confirmed Cases"
+            stats={{
+              absolute: last.cases,
+              change: change.cases
+            }}
             mx={3}
             p={4}
             pt={0}
-          >
-            <Label>Confirmed Cases</Label>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <Box>
-                <Heading as="h2">{formatNumber(last.cases)}</Heading>
-              </Box>
-              <Box>
-                <span>{change.cases}</span>
-              </Box>
-            </Flex>
-          </Container>
+          />
         </Box>
         <Box width={[1 / 4]}>
-          <Container
+          <StatsBox
+            icon={deathsIcon}
+            label="Deaths"
+            stats={{
+              absolute: last.deaths,
+              change: change.deaths
+            }}
             mx={3}
             p={4}
             pt={0}
-          >
-            <Label>Deaths</Label>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <Heading as="h2">{formatNumber(last.deaths)}</Heading>
-              <span>{change.deaths}</span>
-            </Flex>
-          </Container>
+          />
         </Box>
         <Box width={[1 / 4]}>
-          <Container
+          <StatsBox
+            icon={criticalIcon}
+            label="Critical"
+            stats={{
+              absolute: last.critical,
+              change: change.critical
+            }}
             mx={3}
             p={4}
             pt={0}
-          >
-            <Label>Critical</Label>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <Heading as="h2">{formatNumber(last.critical)}</Heading>
-              <span>{change.critical}</span>
-            </Flex>
-          </Container>
+          />
         </Box>
         <Box width={[1 / 4]}>
-          <Container
+          <StatsBox
+            icon={recoveredIcon}
+            label="Recovered"
+            stats={{
+              absolute: last.recovered,
+              change: change.recovered
+            }}
             mx={3}
             p={4}
             pt={0}
-          >
-            <Label>Recovered</Label>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <Heading as="h2">{formatNumber(last.recovered)}</Heading>
-              <span>{change.recovered}</span>
-            </Flex>
-          </Container>
+          />
         </Box>
       </Flex>
       <Flex my={4}>
@@ -153,12 +154,8 @@ export default () => {
         <Flex alignItems="center">
           <Heading as="h3">Worldwide Statistics</Heading>
           <Heading
+            muted
             as="span"
-            css={`
-            font-size: 2rem;
-            margin-left: 0.5em;
-            opacity: 0.4;
-          `}
           >
             (24 Hours)
           </Heading>

@@ -1,59 +1,39 @@
 import React, { useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
-// import ApexChart from 'react-apexcharts'
+import { rgba } from 'polished'
 import { format } from 'date-fns'
-import Loadable from '@loadable/component'
-
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 
 import { abbrNumber, formatNumber } from '../../utils'
 
-const ApexChart = Loadable(() => import('../../../node_modules/react-apexcharts/src/react-apexcharts'))
+const ChartWrapper = styled.div`
+  height: 400px;
 
-const ChartWrapper = styled(ApexChart)`
-  .apexcharts-tooltip {
+  .recharts-text {
+    font-weight: 600;
+    fill: ${ ({ theme }) => theme.color.grey[4] };
+  }
+
+  .recharts-default-tooltip {
     color: ${ ({ theme }) => theme.color.white[1] };
     box-shadow: 0 4px 12px ${ ({ theme }) => theme.color.grey[0] };
     padding: 0.2em;
+    background-color: ${ ({ theme }) => theme.color.grey[0] } !important;
+    border: 1px solid ${ ({ theme }) => theme.color.grey[0] } !important;
+    border-radius: ${ ({ theme }) => theme.radii.md };
 
-
-    &.apexcharts-theme-light {
-      background: ${ ({ theme }) => theme.color.grey[0] };
-      border: 1px solid ${ ({ theme }) => theme.color.grey[0] };
-
-      .apexcharts-tooltip-title {
-        background: ${ ({ theme }) => theme.color.grey[0] };
-        border-bottom: 0;
-        display: flex;
-        justify-content: center;
-      }
-
-      .apexcharts-tooltip-y-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      span.apexcharts-tooltip-text-value {
-        font-size: 1.7rem;
-        color: ${ ({ theme }) => theme.color.white[0] };
-        margin-top: 0.35em;
-      }
-    }
-  }
-
-  .apexcharts-xaxistooltip {
-    color: ${ ({ theme }) => theme.color.white[1] };
-    font-weight: 700;
-    background: ${ ({ theme }) => theme.color.grey[0] };
-    border-color: ${ ({ theme }) => theme.color.grey[0] };
-    border-radius: 6px;
-    box-shadow: 0 4px 12px ${ ({ theme }) => theme.color.grey[0] };
-
-    &-bottom {
-      &::before,
-      &::after {
-        border-bottom-color: ${ ({ theme }) => theme.color.grey[0] };
-      }
+    .recharts-tooltip-item-name {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: ${ ({ theme }) => theme.color.white[0] };
     }
   }
 `
@@ -61,116 +41,68 @@ const ChartWrapper = styled(ApexChart)`
 const Chart = ({ data, dataSet }) => {
   const theme = useTheme()
 
-  const settings = {
-    options: {
-      chart: {
-        id: 'line',
-        toolbar: {
-          show: false
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      stroke: {
-        show: true,
-        curve: 'smooth',
-        lineCap: 'butt',
-        width: 3,
-        dashArray: 0,
-        colors: theme.color.blue
-      },
-      grid: {
-        borderColor: theme.color.grey[3],
-      },
-      xaxis: {
-        tickAmount: 5,
-        categories: data.map(entry => format(entry.updated, 'MMMM, do')),
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        },
-        labels: {
-          offsetY: 5,
-          style: {
-            fontSize: '14px',
-            colors: theme.color.grey[4],
-            fontFamily: 'Manrope, sans-serif',
-            fontWeight: '600'
-          },
-        },
-        crosshairs: {
-          stroke: {
-            color: theme.color.blue[0],
-            width: 1,
-            dashArray: 0
-          }
-        },
-      },
-      dataLabels: {
-        enabled: false
-      },
-      yaxis: {
-        crosshairs: {
-          stroke: {
-            color: theme.color.grey[1]
-          }
-        },
-        labels: {
-          formatter: val => abbrNumber(val),
-          style: {
-            fontSize: '14px',
-            fontFamily: 'Manrope, sans-serif',
-            fontWeight: 600,
-            colors: theme.color.grey[4],
-          },
-          offsetX: -12
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      fill: {
-        type: 'gradient',
-        colors: theme.color.blue,
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.3,
-          opacityTo: 0,
-          stops: [0, 100]
-        }
-      },
-      tooltip: {
-        enabled: true,
-        onDatasetHover: {
-          highlightDataSeries: true,
-        },
-        x: {
-          show: false,
-        },
-        y: {
-          formatter: val => formatNumber(val)
-        }
-      }
-    },
-    series: [
-      {
-        name: 'Cases',
-        data: data.map(entry => entry[dataSet])
-      }
-    ]
-  }
-
   return (
-    <ChartWrapper
-      options={settings.options}
-      series={settings.series}
-      type="area"
-      width="100%"
-      height="400px"
-    />
+    <ChartWrapper>
+      <ResponsiveContainer>
+        <AreaChart
+          data={data}
+          type="monotone"
+          margin={{
+            top: 40,
+            right: 10,
+            left: 10,
+            bottom: 20
+          }}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={theme.color.blue[0]} stopOpacity={0.15}/>
+              <stop offset="95%" stopColor={theme.color.blue[0]} stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid
+            vertical={false}
+            stroke={theme.color.grey[3]}
+          />
+          <XAxis
+            dataKey="updated"
+            tickFormatter={date => format(date, 'MMMM, do')}
+            tickMargin={15}
+            tickLine={false}
+            axisLine={false}
+            tickCount={3}
+          />
+          <YAxis
+            dataKey={dataSet}
+            tickFormatter={val => abbrNumber(val)}
+            tickMargin={15}
+            tickLine={false}
+            axisLine={false}
+            domain={['dataMin', 'auto']} />
+          />
+          <Tooltip
+            wrapperStyle={{
+              color: theme.color.white[1],
+              boxShadow: `0 4px 12px ${theme.color.grey[0]}`,
+              padding: '0.2em',
+              backgroundColor: theme.color.grey[0],
+              border: `1px solid ${theme.color.grey[0]}`,
+              borderRadius: theme.radii.md,
+            }}
+            formatter={e => ['', formatNumber(e)]}
+            labelFormatter={() => dataSet}
+            labelStyle={{
+              textTransform: 'capitalize'
+            }}
+            separator=""
+            cursor={{
+              strokeWidth: 1,
+              stroke: theme.color.blue[0]
+            }}
+          />
+          <Area type='monotone' dataKey={dataSet} strokeWidth="3" stroke={theme.color.blue[0]} fill="url(#colorUv)" />
+        </AreaChart>
+      </ResponsiveContainer>
+    </ChartWrapper>
   )
 }
 

@@ -24,6 +24,12 @@ const TableRow = styled(Flex)`
 
   :hover {
     background-color: ${ ({ theme }) => theme.color.grey[2] };
+
+    a {
+      background-color: ${ ({ theme }) => theme.color.blue[0] };
+      border-color: ${ ({ theme }) => theme.color.blue[0] };
+      color: #fff;
+    }
   }
 
   img {
