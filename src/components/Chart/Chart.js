@@ -40,12 +40,13 @@ const ChartWrapper = styled.div`
 
 const Chart = ({ data, dataSet }) => {
   const theme = useTheme()
+  const truncated = data.slice(data.length - 30)
 
   return (
     <ChartWrapper>
       <ResponsiveContainer>
         <AreaChart
-          data={data}
+          data={truncated}
           type="monotone"
           margin={{
             top: 40,
@@ -70,6 +71,7 @@ const Chart = ({ data, dataSet }) => {
             tickLine={false}
             axisLine={false}
             tickCount={3}
+            interval={2}
           />
           <YAxis
             dataKey={dataSet}
@@ -88,8 +90,8 @@ const Chart = ({ data, dataSet }) => {
               border: `1px solid ${theme.color.grey[0]}`,
               borderRadius: theme.radii.md,
             }}
-            formatter={e => ['', formatNumber(e)]}
-            labelFormatter={() => dataSet}
+            formatter={value => ['', formatNumber(value)]}
+            labelFormatter={(date) => format(date, 'MMMM, do')}
             labelStyle={{
               textTransform: 'capitalize'
             }}

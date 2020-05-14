@@ -39,7 +39,6 @@ const StatsBox = ({ stats, label, icon, ...rest }) => {
     <Container {...rest}>
       <Flex
         alignItems="space-between"
-        // justifyContent="center"
         flexDirection="column"
       >
         <IconContainer

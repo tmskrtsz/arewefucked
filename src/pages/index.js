@@ -31,7 +31,7 @@ export default () => {
   const { stats } = data
 
   const last = stats[stats.length - 1]
-  const beforeLast = stats[stats.length - 2]
+  const first = stats[stats.length - 30]
 
   const dataSets = [
     'cases',
@@ -42,12 +42,13 @@ export default () => {
 
   useEffect(() => {
     setChange({
-      cases: percentageChange(last.cases, beforeLast.cases),
-      deaths: percentageChange(last.deaths, beforeLast.deaths),
-      critical: percentageChange(last.critical, beforeLast.critical),
-      recovered: percentageChange(last.recovered, beforeLast.recovered)
+      cases: percentageChange(last.cases, first.cases),
+      deaths: percentageChange(last.deaths, first.deaths),
+      critical: percentageChange(last.critical, first.critical),
+      recovered: percentageChange(last.recovered, first.recovered)
     })
-  }, [last, beforeLast])
+  }, [last, first])
+
 
   return (
     <>
@@ -67,7 +68,7 @@ export default () => {
             label="Confirmed Cases"
             stats={{
               absolute: last.cases,
-              change: change.cases
+              change: change.cases || ''
             }}
             mx={3}
             p={4}
@@ -80,7 +81,7 @@ export default () => {
             label="Deaths"
             stats={{
               absolute: last.deaths,
-              change: change.deaths
+              change: change.deaths || ''
             }}
             mx={3}
             p={4}
@@ -93,7 +94,7 @@ export default () => {
             label="Critical"
             stats={{
               absolute: last.critical,
-              change: change.critical
+              change: change.critical || ''
             }}
             mx={3}
             p={4}
@@ -106,7 +107,7 @@ export default () => {
             label="Recovered"
             stats={{
               absolute: last.recovered,
-              change: change.recovered
+              change: change.recovered || ''
             }}
             mx={3}
             p={4}
