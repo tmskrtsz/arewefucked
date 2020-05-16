@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { graphql } from 'gatsby'
+import kebabCase from 'lodash/kebabCase'
 
-import { Heading, Flex, Box } from '../components'
+import {
+  Container,
+  Heading,
+  Flex,
+  Box,
+  Chart,
+  Breadcrumbs,
+  Button,
+  Secondary
+} from '../components'
 
-const Hero = styled(Box)`
-`
+import { formatNumber, percentageChange } from '../utils'
 
 const FlagBg = styled.div`
   width: 100%;
@@ -32,47 +41,170 @@ const FlagBg = styled.div`
 
 const FlagAvatar = styled.div`
   position: relative;
-  background-color: ${ ({ theme }) => theme.color.grey[3] };
   display: inline-block;
-  padding: 0.7em;
-  border-radius: 12px;
+  border-radius: 4px;
+  width: 72px;
 
   img {
     z-index: 200;
-    max-width: 184px;
-    border-radius: ${ ({ theme }) => theme.radii.md };
-    border: 3px solid white;
+    max-width: 100%;
+    border-radius: ${ ({ theme }) => theme.radii.sm };
   }
 `
 
 const Page = ({ data }) => {
+  const [activeSet, setActiveSet] = useState('cases')
+  const [change, setChange] = useState({})
   const { mongodbCovidCountries: res } = data
+  const { stats, metadata, name } = res
+
+  const last = stats[stats.length - 1]
+  const first = stats[stats.length - 30]
+
+  const dataSets = [
+    'cases',
+    'deaths',
+    'critical',
+    'recovered'
+  ]
+
+  useEffect(() => {
+    setChange({
+      cases: percentageChange(last.cases, first.cases),
+      deaths: percentageChange(last.deaths, first.deaths),
+      critical: percentageChange(last.critical, first.critical),
+      recovered: percentageChange(last.recovered, first.recovered)
+    })
+  }, [last, first])
 
   return (
     <>
-      <Flex alignItems="center">
-        <Heading as="h1">{res.name}</Heading>
-        <Heading
-          as="span"
-          css={`
-            font-size: 2rem;
-            margin-left: 0.5em;
-            opacity: 0.4;
-          `}
-        >
-          (24 Hours)
-        </Heading>
+      <Flex flexDirection="column">
+        <Box width={1}>
+          <Flex alignItems="center">
+            <Heading as="h1">{name}</Heading>
+            <Heading
+              as="span"
+              css={`
+                font-size: 2rem;
+                margin-left: 0.5em;
+                opacity: 0.4;
+              `}
+            >
+              (Last 30 Days)
+            </Heading>
+          </Flex>
+        </Box>
+        <Box pb={4}>
+          <Breadcrumbs links={[
+            {
+              name,
+              path: kebabCase(name.toLowerCase())
+            }
+          ]}
+          />
+        </Box>
       </Flex>
-      <Hero>
+      <Box>
         <Flex flexDirection="column">
-          <FlagBg bgFlag={res.metadata.flag} />
-          <Box my={-50}>
-            <FlagAvatar>
-              <img src={res.metadata.flag} />
-            </FlagAvatar>
-          </Box>
+          <FlagBg bgFlag={metadata.flag} />
         </Flex>
-      </Hero>
+      </Box>
+      <Flex
+        mt={-140}
+        mx={4}
+      >
+        <Container
+          width={1}
+          p={4}
+        >
+          <Flex
+            pb={4}
+            alignItems="center"
+          >
+            <Box width={1 / 2}>
+              <FlagAvatar>
+                <img
+                  src={metadata.flag}
+                  alt={name}
+                />
+              </FlagAvatar>
+            </Box>
+            <Box width={1 / 2}>
+              <Flex alignItems="center" justifyContent="flex-end">
+                <Box mr={4}>
+                  <Heading
+                    as="h6"
+                    muted
+                  >Cases</Heading>
+                  <Heading as="h5">{formatNumber(last.cases)}</Heading>
+                </Box>
+                <Box mx={4}>
+                  <Heading
+                    as="h6"
+                    muted
+                  >Deaths</Heading>
+                  <Heading as="h5">{formatNumber(last.deaths)}</Heading>
+                </Box>
+                <Box mx={4}>
+                  <Heading
+                    as="h6"
+                    muted
+                  >Critical</Heading>
+                  <Heading as="h5">{formatNumber(last.critical)}</Heading>
+                </Box>
+                <Box ml={4}>
+                  <Heading
+                    as="h6"
+                    muted
+                  >Recovered</Heading>
+                  <Heading as="h5">{formatNumber(last.recovered)}</Heading>
+                </Box>
+              </Flex>
+            </Box>
+          </Flex>
+
+          <Flex flexDirection="column">
+            <Box wdith={1} pb={4}>
+              <Heading as="h3">Statistics</Heading>
+            </Box>
+            <Box width={1}>
+              <Flex>
+                {dataSets.map(dataSet => (
+                  dataSet === activeSet
+                    ? (
+                      <Box
+                        key={dataSet}
+                        mr={2}
+                      >
+                        <Button
+                          type="button"
+                          onClick={() => setActiveSet(dataSet)}
+                        >
+                          {dataSet}
+                        </Button>
+                      </Box>
+                    )
+                    : (
+                      <Box
+                        key={dataSet}
+                        mr={2}
+                      >
+                        <Secondary
+                          type="button"
+                          onClick={() => setActiveSet(dataSet)}
+                        >
+                          {dataSet}
+                        </Secondary>
+                      </Box>
+                    )
+                ))}
+              </Flex>
+              <Chart data={stats} dataSet={activeSet} />
+            </Box>
+          </Flex>
+        </Container>
+      </Flex>
     </>
   )
 }

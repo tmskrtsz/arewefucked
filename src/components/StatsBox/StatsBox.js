@@ -7,6 +7,7 @@ import Container from '../Container/Container'
 import { Flex, Box } from '../Grid/Flexbox'
 import Label from '../Text/Label'
 import Heading from '../Text/Heading'
+import Change from '../Change/Change'
 
 const Description = styled(Box)`
   ${ Heading },
@@ -55,7 +56,7 @@ const StatsBox = ({ stats, label, icon, ...rest }) => {
               justifyContent="space-between"
             >
               <Heading as="h5">{formatNumber(stats.absolute)}</Heading>
-              <span>{stats.change}</span>
+              <Change criteria={stats.changeCriteria}>{stats.change}</Change>
             </Flex>
           </Flex>
         </Description>
@@ -68,7 +69,8 @@ StatsBox.propTypes = {
   label: PropTypes.string.isRequired,
   stats: PropTypes.shape({
     absolute: PropTypes.number.isRequired,
-    change: PropTypes.string.isRequired
+    change: PropTypes.string.isRequired,
+    changeCriteria: PropTypes.oneOf(['positive', 'negative']).isRequired
   }).isRequired,
   icon: PropTypes.string.isRequired
 }

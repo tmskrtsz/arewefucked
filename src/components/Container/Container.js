@@ -7,6 +7,7 @@ const Container = styled(Box)`
   background-color: ${ ({ theme }) => theme.color.grey[2] };
   border-radius: ${ ({ theme }) => theme.radii.md };
   box-shadow: 0 6px 20px -8px ${ ({ theme }) => darken(0.02, theme.color.grey[0]) };
+  z-index: 100;
 `
 
 export default Container

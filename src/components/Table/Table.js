@@ -1,16 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'gatsby'
+import kebabCase from 'lodash/kebabCase'
 
-import { Flex, Box, Secondary } from '..'
+import { Flex, Box, Secondary, Heading } from '..'
 import { formatNumber } from '../../utils'
 
 const TableHeader = styled(Flex)`
   border-bottom: 2px solid ${ ({ theme }) => theme.color.grey[2] };
 
   span {
-    font-weight: 600;
-    text-transform: uppercase;
+    font-size: 1.7rem;
+    font-weight: 700;
     color: ${ ({ theme }) => theme.color.grey[4] };
   }
 `
@@ -90,7 +91,7 @@ const Table = ({ header, items }) => {
             <Box width={[1 / 5]}>
               <Flex justifyContent="space-between" alignItems="center">
                 {formatNumber(entry.stats.recovered)}
-                <Secondary as={Link} to={`/${entry.name.toLowerCase()}`}>
+                <Secondary as={Link} to={`/${kebabCase(entry.name.toLowerCase())}`}>
                   More
                 </Secondary>
               </Flex>

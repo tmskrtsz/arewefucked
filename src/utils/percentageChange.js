@@ -7,5 +7,9 @@ export function percentageChange (newNumber, oldNumber) {
   const increase = newNumber - oldNumber
   const percentage = increase / oldNumber * 100
 
-  return `${percentage.toFixed(2).toLocaleString()}%`
+  if (Math.sign(percentage) === -1) {
+    return `${percentage.toFixed(2).toLocaleString()}%`
+  }
+
+  return `+${percentage.toFixed(2).toLocaleString()}%`
 }

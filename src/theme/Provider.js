@@ -22,30 +22,36 @@ const Global = createGlobalStyle`
 
   h1 {
     font-size: 4.8rem;
+    letter-spacing: -1.4px;
   }
 
   h2 {
     font-size: 4rem;
+    letter-spacing: -0.9px;
   }
 
   h3 {
     font-size: 3.3rem;
+    letter-spacing: -0.5px;
   }
 
   h4 {
     font-size: 2.7rem;
+    letter-spacing: -0.33px;
   }
 
   h5 {
     font-size: 2.2rem;
+    letter-spacing: -0.1px;
   }
 
   h6 {
-    font-size: 1.7rem;
+    font-size: 1.4rem;
   }
 
+  h1, h2, h3,
   h4, h5, h6 {
-    font-weight: 400;
+    margin: 0;
   }
 `
 

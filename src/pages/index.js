@@ -12,7 +12,8 @@ import {
   Button,
   Secondary,
   Table,
-  StatsBox
+  StatsBox,
+  Change
 } from '../components'
 import { formatNumber, percentageChange } from '../utils'
 
@@ -49,17 +50,31 @@ export default () => {
     })
   }, [last, first])
 
-
   return (
     <>
       <Hero>
-        <h4>{change.cases} increase in world cases</h4>
-        <h1>Yes, We’re Fucked</h1>
-        <h3>Stay Home</h3>
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+        >
+          <h6><Change criteria="negative">{change.cases}</Change></h6>
+          <Box ml={2}><h4>increase in world cases</h4></Box>
+        </Flex>
+        <Box width={1} py={3}>
+          <h1>Yes, We’re Fucked</h1>
+        </Box>
+        <Box width={1}>
+          <h3>Stay Home</h3>
+        </Box>
       </Hero>
-      <Flex alignItems="center">
+      <Flex
+        alignItems="center"
+        py={4}
+      >
         <Heading as="h3">Total Statistics</Heading>
-        <Heading as="span" muted>(Last 30 Days)</Heading>
+        <Box ml={2}>
+          <Heading as="h5" muted>(Last 30 Days)</Heading>
+        </Box>
       </Flex>
       <Flex flexWrap="wrap" mx={-3}>
         <Box width={[1 / 4]}>
@@ -68,7 +83,8 @@ export default () => {
             label="Confirmed Cases"
             stats={{
               absolute: last.cases,
-              change: change.cases || ''
+              change: change.cases || '',
+              changeCriteria: 'negative'
             }}
             mx={3}
             p={4}
@@ -81,7 +97,8 @@ export default () => {
             label="Deaths"
             stats={{
               absolute: last.deaths,
-              change: change.deaths || ''
+              change: change.deaths || '',
+              changeCriteria: 'negative'
             }}
             mx={3}
             p={4}
@@ -94,7 +111,8 @@ export default () => {
             label="Critical"
             stats={{
               absolute: last.critical,
-              change: change.critical || ''
+              change: change.critical || '',
+              changeCriteria: 'positive'
             }}
             mx={3}
             p={4}
@@ -107,7 +125,8 @@ export default () => {
             label="Recovered"
             stats={{
               absolute: last.recovered,
-              change: change.recovered || ''
+              change: change.recovered || '',
+              changeCriteria: 'positive'
             }}
             mx={3}
             p={4}
@@ -152,14 +171,14 @@ export default () => {
         </Box>
       </Flex>
       <Flex flexWrap="wrap" flexDirection="column">
-        <Flex alignItems="center">
+        <Flex
+          alignItems="center"
+          py={4}
+        >
           <Heading as="h3">Worldwide Statistics</Heading>
-          <Heading
-            muted
-            as="span"
-          >
-            (24 Hours)
-          </Heading>
+          <Box ml={2}>
+            <Heading as="h5" muted>(24 Hours)</Heading>
+          </Box>
         </Flex>
         <Table
           header={['Country', 'Cases', 'Deaths', 'Critical', 'Recovered']}
