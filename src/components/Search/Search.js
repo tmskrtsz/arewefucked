@@ -35,7 +35,7 @@ const Dropdown = styled.div`
   position: absolute;
   top: 100%;
   width: 100%;
-  height: 250px;
+  max-height: 250px;
   background-color: ${ ({ theme }) => theme.color.grey[0] };
   border: 2px solid ${ ({ theme }) => theme.color.blue[0] };
   z-index: 200;
