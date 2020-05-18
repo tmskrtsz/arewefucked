@@ -69,10 +69,10 @@ const Table = ({ header, items }) => {
             alignItems="center"
           >
             <Box width={[1 / 5]}>
-              <Link to={`/${entry.name.toLowerCase()}`}>
+              <Link to={`/${kebabCase(entry.name)}`}>
                 <Flex alignItems="center">
                   <img
-                    src={`https://www.countryflags.io/${ entry.iso.toLowerCase() }/shiny/64.png`}
+                    src={`https://www.countryflags.io/${ entry.iso }/shiny/64.png`}
                     alt={`Flag of ${entry.name}`}
                   />
                   <strong>{entry.name}</strong>
@@ -91,7 +91,7 @@ const Table = ({ header, items }) => {
             <Box width={[1 / 5]}>
               <Flex justifyContent="space-between" alignItems="center">
                 {formatNumber(entry.stats.recovered)}
-                <Secondary as={Link} to={`/${kebabCase(entry.name.toLowerCase())}`}>
+                <Secondary as={Link} to={`/${kebabCase(entry.name)}`}>
                   More
                 </Secondary>
               </Flex>

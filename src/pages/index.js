@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
+import { format } from 'date-fns'
 
 import {
   Hero,
@@ -21,6 +22,7 @@ import casesIcon from '../images/cases.svg'
 import deathsIcon from '../images/deaths.svg'
 import criticalIcon from '../images/critical.svg'
 import recoveredIcon from '../images/recovered.svg'
+
 
 export default () => {
   const [activeSet, setActiveSet] = useState('cases')
@@ -58,7 +60,9 @@ export default () => {
           alignItems="center"
         >
           <h6><Change criteria="negative">{change.cases}</Change></h6>
-          <Box ml={2}><h4>increase in world cases</h4></Box>
+          <Box ml={2}>
+            <h4>increase in world cases since {format(first.updated, 'MMMM, do')}</h4>
+          </Box>
         </Flex>
         <Box width={1} py={3}>
           <h1>Yes, We’re Fucked</h1>

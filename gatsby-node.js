@@ -10,6 +10,17 @@ const { Country } = require('./src/api/db')
 const { get } = require('./src/api/get')
 
 exports.onPreInit = async () => {
+  // Check if the value from the database is current
+  const isDataFromToday = await Country.findOne({
+    name: 'worldwide'
+  })
+
+  const { updated: time } = isDataFromToday.stats[isDataFromToday.stats.length - 1]
+
+  if (isToday(time)) {
+    return
+  }
+
   const data = [
     ...(await get('https://corona.lmao.ninja/v2/countries')),
     {
@@ -110,25 +121,22 @@ exports.onPreInit = async () => {
 exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => {
   const { createNode } = actions
 
-  const all = await get('https://corona.lmao.ninja/v2/countries')
+  const res = await Country.find({
+    name: { $not: { $eq: 'worldwide' } }
+  },
+  { stats: { $slice: -1 }, name: 1, metadata: 1 },
+  {
+    sort: { 'stats.cases': -1 },
+    limit: 20,
+  })
 
-  const formatted = all.map(entry => ({
-    name: entry.country,
-    stats: {
-      cases: entry.cases,
-      deaths: entry.deaths,
-      critical: entry.critical,
-      recovered: entry.recovered,
-    },
-    iso: entry.countryInfo.iso2
-      ? entry.countryInfo.iso2.toLowerCase()
-      : entry.countryInfo.iso2
+  const countries = res.map(entry => ({
+    name: entry.name,
+    iso: entry.metadata.iso.toLowerCase(),
+    stats: entry.stats[0],
   }))
-    .filter(entity => !isNull(entity.iso))
 
-  const top20 = {
-    countries: orderBy(formatted, ['stats.cases'], ['desc']).slice(0, 20)
-  }
+  const top20 = { countries }
 
   const nodeMeta = {
     id: createNodeId('top20'),

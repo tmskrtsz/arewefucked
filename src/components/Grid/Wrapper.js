@@ -3,7 +3,8 @@ import { Box } from './Flexbox'
 
 const Wrapper = styled(Box)`
   max-width: 120rem;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 export default Wrapper

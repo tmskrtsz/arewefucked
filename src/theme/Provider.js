@@ -5,6 +5,10 @@ import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import global from './theme'
 
 const Global = createGlobalStyle`
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   html {
     font-size: 62.5%;
   }

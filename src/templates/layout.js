@@ -7,7 +7,7 @@ import StyledProvider from '../theme/Provider'
 const Layout = ({ children }) => {
   return (
     <StyledProvider>
-      <Wrapper>
+      <Wrapper mt={120}>
         <Header />
         {children}
       </Wrapper>
