@@ -92,7 +92,7 @@ const Table = ({ header, items }) => {
               <Flex justifyContent="space-between" alignItems="center">
                 {formatNumber(entry.stats.recovered)}
                 <Secondary as={Link} to={`/${kebabCase(entry.name)}`}>
-                  More
+                  More Stats
                 </Secondary>
               </Flex>
             </Box>

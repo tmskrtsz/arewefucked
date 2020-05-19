@@ -102,8 +102,19 @@ const Search = () => {
       ref={ref}
       active={active}
     >
+      <label
+        htmlFor="search"
+        style={{
+          position: 'absolute',
+          top: '-500px'
+        }}
+      >
+        Search country list
+      </label>
       <Icon src={searchIcon} alt="Search icon" />
       <Input
+        id="search"
+        type="search"
         placeholder="Search for a country"
         onChange={getInput}
         onClick={() => setActive(!active)}

@@ -57,6 +57,10 @@ const Global = createGlobalStyle`
   h4, h5, h6 {
     margin: 0;
   }
+
+  ::placeholder {
+    color: ${ ({ theme }) => theme.color.grey[4] };
+  }
 `
 
 const StyledProvider = ({ children }) => {

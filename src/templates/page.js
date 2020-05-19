@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { graphql } from 'gatsby'
 import kebabCase from 'lodash/kebabCase'
+import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
 import {
   Container,
@@ -79,6 +80,10 @@ const Page = ({ data }) => {
 
   return (
     <>
+      <GatsbySeo
+        title={`${name} Statistics`}
+        description={`COVID-19 statistics for ${name}. Based on the last 30 days of data`}
+      />
       <Flex flexDirection="column">
         <Box width={1}>
           <Flex alignItems="center">

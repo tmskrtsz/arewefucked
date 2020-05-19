@@ -7,6 +7,7 @@ const Input = styled.input`
   padding: 0.8em 1.2em;
   border-radius: ${ ({ theme }) => theme.radii.sm };
   color: ${ ({ theme }) => theme.text.color };
+  font-family: ${ ({ theme }) => theme.text.font };
 
   :focus {
     border-color: ${ ({ theme }) => theme.color.blue[0] };

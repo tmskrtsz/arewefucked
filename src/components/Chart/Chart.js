@@ -79,7 +79,7 @@ const Chart = ({ data, dataSet }) => {
             tickMargin={15}
             tickLine={false}
             axisLine={false}
-            domain={['dataMin', 'auto']} />
+            domain={['dataMin', 'auto']}
           />
           <Tooltip
             wrapperStyle={{

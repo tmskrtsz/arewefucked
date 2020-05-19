@@ -4,7 +4,9 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: 'Are We Fucked?'
+    titleTemplate: 'Are We Fucked? /// %s',
+    description: 'Track COVID-19 data across multiple countries',
+    siteUrl: 'https://www.arewefucked.app'
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -48,6 +50,21 @@ module.exports = {
           w: 'majority'
         }
       },
-    }
+    },
+    'gatsby-plugin-next-seo',
+    {
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        name: 'Are We Fucked?',
+        short_name: 'arewefucked',
+        start_url: '/',
+        background_color: '#222B42',
+        theme_color: '#0056FD',
+        lang: 'en',
+        display: 'minimal-ui',
+        icon: 'src/images/favicon.png'
+      }
+    },
+    'gatsby-plugin-offline'
   ],
 }

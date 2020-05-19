@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { format } from 'date-fns'
+import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
 import {
   Hero,
@@ -54,6 +55,10 @@ export default () => {
 
   return (
     <>
+      <GatsbySeo
+        title="Worldwide Statistics"
+        description="COVID-19 statistics based on the last 30 days of data"
+      />
       <Hero>
         <Flex
           justifyContent="center"
