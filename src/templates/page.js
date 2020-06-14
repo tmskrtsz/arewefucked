@@ -54,7 +54,7 @@ const FlagAvatar = styled.div`
 `
 
 const Page = ({ data }) => {
-  const [activeSet, setActiveSet] = useState('cases')
+  const [activeSet, setActiveSet] = useState('active')
   const [change, setChange] = useState({})
   const { mongodbCovidCountries: res } = data
   const { stats, metadata, name } = res
@@ -63,6 +63,7 @@ const Page = ({ data }) => {
   const first = stats[stats.length - 30]
 
   const dataSets = [
+    'active',
     'cases',
     'deaths',
     'critical',
@@ -71,6 +72,7 @@ const Page = ({ data }) => {
 
   useEffect(() => {
     setChange({
+      active: percentageChange(last.active, first.active),
       cases: percentageChange(last.cases, first.cases),
       deaths: percentageChange(last.deaths, first.deaths),
       critical: percentageChange(last.critical, first.critical),
@@ -137,28 +139,35 @@ const Page = ({ data }) => {
             </Box>
             <Box width={1 / 2}>
               <Flex alignItems="center" justifyContent="flex-end">
-                <Box mr={4}>
+                <Box width={1 / 5} textAlign="center">
+                  <Heading
+                    as="h6"
+                    muted
+                  >Active</Heading>
+                  <Heading as="h5">{formatNumber(last.active)}</Heading>
+                </Box>
+                <Box width={1 / 5} textAlign="center">
                   <Heading
                     as="h6"
                     muted
                   >Cases</Heading>
                   <Heading as="h5">{formatNumber(last.cases)}</Heading>
                 </Box>
-                <Box mx={4}>
+                <Box width={1 / 5} textAlign="center">
                   <Heading
                     as="h6"
                     muted
                   >Deaths</Heading>
                   <Heading as="h5">{formatNumber(last.deaths)}</Heading>
                 </Box>
-                <Box mx={4}>
+                <Box width={1 / 5} textAlign="center">
                   <Heading
                     as="h6"
                     muted
                   >Critical</Heading>
                   <Heading as="h5">{formatNumber(last.critical)}</Heading>
                 </Box>
-                <Box ml={4}>
+                <Box width={1 / 5} textAlign="center">
                   <Heading
                     as="h6"
                     muted

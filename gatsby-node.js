@@ -121,37 +121,42 @@ exports.onPreInit = async () => {
 exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => {
   const { createNode } = actions
 
-  const res = await Country.find({
-    name: { $not: { $eq: 'worldwide' } }
-  },
-  { stats: { $slice: -1 }, name: 1, metadata: 1 },
-  {
-    sort: { 'stats.cases': -1 },
-    limit: 20,
-  })
 
-  const countries = res.map(entry => ({
-    name: entry.name,
-    iso: entry.metadata.iso.toLowerCase(),
-    stats: entry.stats[0],
-  }))
+  async function top20ByActiveCases () {
+    const res = await Country.find({
+      name: { $not: { $eq: 'worldwide' } }
+    },
+    { stats: { $slice: -1 }, name: 1, metadata: 1 },
+    {
+      sort: { 'stats.active': -1 },
+      limit: 20,
+    })
 
-  const top20 = { countries }
+    const countries = res.map(entry => ({
+      name: entry.name,
+      iso: entry.metadata.iso.toLowerCase(),
+      stats: entry.stats[0],
+    }))
 
-  const nodeMeta = {
-    id: createNodeId('top20'),
-    parent: null,
-    children: [],
-    internal: {
-      type: 'Top20',
-      mediaType: 'application/javascript',
-      content: JSON.stringify(top20),
-      contentDigest: createContentDigest(top20)
+    const top20 = { countries }
+
+    const nodeMeta = {
+      id: createNodeId('top20'),
+      parent: null,
+      children: [],
+      internal: {
+        type: 'Top20',
+        mediaType: 'application/javascript',
+        content: JSON.stringify(top20),
+        contentDigest: createContentDigest(top20)
+      }
     }
+
+    const node = { ...top20, ...nodeMeta }
+    createNode(node)
   }
 
-  const node = { ...top20, ...nodeMeta }
-  createNode(node)
+  await top20ByActiveCases()
 }
 
 exports.createPages = async ({ graphql, actions, reporter }) => {

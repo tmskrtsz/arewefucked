@@ -12,7 +12,7 @@ const Wrapper = styled.header`
   width: 100%;
   padding: 1em 0;
   background-color: ${ ({ theme }) => theme.color.grey[1] };
-  border-bottom: 1px solid ${ ({ theme }) => rgba(theme.color.grey[4], 0.4) };
+  border-bottom: 1px solid ${ ({ theme }) => theme.color.grey[3] };
   position: fixed;
   top: 0;
   left: 0;

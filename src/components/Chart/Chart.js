@@ -40,7 +40,7 @@ const ChartWrapper = styled.div`
 
 const Chart = ({ data, dataSet }) => {
   const theme = useTheme()
-  const truncated = data.slice(data.length - 30)
+  const truncated = data.slice(data.length - 29)
 
   return (
     <ChartWrapper>

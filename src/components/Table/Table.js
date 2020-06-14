@@ -68,7 +68,7 @@ const Table = ({ header, items }) => {
             px={3}
             alignItems="center"
           >
-            <Box width={[1 / 5]}>
+            <Box width={[1 / 6]}>
               <Link to={`/${kebabCase(entry.name)}`}>
                 <Flex alignItems="center">
                   <img
@@ -79,18 +79,21 @@ const Table = ({ header, items }) => {
                 </Flex>
               </Link>
             </Box>
-            <Box width={[1 / 5]}>
-              {formatNumber(entry.stats.cases)}
+            <Box width={[1 / 6]}>
+              {formatNumber(entry.stats.active)}
             </Box>
-            <Box width={[1 / 5]}>
+            <Box width={[1 / 6]}>
               {formatNumber(entry.stats.deaths)}
             </Box>
-            <Box width={[1 / 5]}>
+            <Box width={[1 / 6]}>
               {formatNumber(entry.stats.critical)}
             </Box>
-            <Box width={[1 / 5]}>
+            <Box width={[1 / 6]}>
+              {formatNumber(entry.stats.recovered)}
+            </Box>
+            <Box width={[1 / 6]}>
               <Flex justifyContent="space-between" alignItems="center">
-                {formatNumber(entry.stats.recovered)}
+                {formatNumber(entry.stats.cases)}
                 <Secondary as={Link} to={`/${kebabCase(entry.name)}`}>
                   More Stats
                 </Secondary>

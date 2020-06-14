@@ -4,7 +4,7 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    titleTemplate: 'Are We Fucked? /// %s',
+    titleTemplate: '%s /// Are We Fucked?',
     description: 'Track COVID-19 data across multiple countries',
     siteUrl: 'https://www.arewefucked.app'
   },
