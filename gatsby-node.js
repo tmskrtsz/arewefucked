@@ -4,7 +4,6 @@ const isToday = require('date-fns/isToday')
 const format = require('date-fns/format')
 const kebabCase = require('lodash/kebabCase')
 const chalk = require('chalk')
-const orderBy = require('lodash/orderBy')
 
 const { Country } = require('./src/api/db')
 const { get } = require('./src/api/get')

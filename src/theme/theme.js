@@ -8,7 +8,7 @@ export default {
   },
   text: {
     color: '#f5f5f5',
-    font: '"Manrope", sans-serif',
+    font: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     size: {
       body: '1.4rem'
     }

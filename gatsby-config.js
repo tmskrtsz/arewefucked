@@ -30,14 +30,6 @@ module.exports = {
       },
     },
     'gatsby-plugin-styled-components',
-    {
-      resolve: 'gatsby-plugin-web-font-loader',
-      options: {
-        google: {
-          families: ['Manrope:400,600,700']
-        }
-      }
-    },
     'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-source-mongodb',
