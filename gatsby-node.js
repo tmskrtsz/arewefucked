@@ -132,7 +132,9 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => 
       limit: 20,
     })
 
-    const countries = res.map(entry => ({
+    const sorted = res.sort((a, b) => b.stats[0].active - a.stats[0].active)
+
+    const countries = sorted.map(entry => ({
       name: entry.name,
       iso: entry.metadata.iso.toLowerCase(),
       stats: entry.stats[0],
@@ -156,7 +158,59 @@ exports.sourceNodes = async ({ actions, createNodeId, createContentDigest }) => 
     createNode(node)
   }
 
+  async function bestPerfomingLast30Days () {
+    const res = await Country.find({
+      name: { $not: { $eq: 'worldwide' } }
+    },
+    { stats: { $slice: -30 }, name: 1, metadata: 1 })
+
+    const formatted = res.map(entry => ({
+      name: entry.name,
+      iso: entry.metadata.iso && entry.metadata.iso.toLowerCase(),
+      stats: [
+        entry.stats[0],
+        entry.stats[entry.stats.length - 1]
+      ],
+      change: (() => {
+        const old = entry.stats[0].active
+        const last = entry.stats[entry.stats.length - 1].active
+
+        if (old === 0) return 0
+
+        return (last - old) / old * 100
+      })()
+    }))
+
+    const sorted = formatted.sort((a, b) => a.change - b.change)
+
+    const bestTop20 = {
+      countries: sorted
+        .filter(entry => entry.stats[1].cases > 1000)
+        .map(entry =>({
+          ...entry,
+          change: entry.change.toFixed(3)
+        }))
+        .slice(0, 20)
+    }
+
+    const nodeMeta = {
+      id: createNodeId('bestTop20'),
+      parent: null,
+      children: [],
+      internal: {
+        type: 'BestTop20',
+        mediaType: 'application/javascript',
+        content: JSON.stringify(bestTop20),
+        contentDigest: createContentDigest(bestTop20)
+      }
+    }
+
+    const node = { ...bestTop20, ...nodeMeta }
+    createNode(node)
+  }
+
   await top20ByActiveCases()
+  await bestPerfomingLast30Days()
 }
 
 exports.createPages = async ({ graphql, actions, reporter }) => {

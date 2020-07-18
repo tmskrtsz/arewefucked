@@ -106,4 +106,4 @@ const Table = ({ header, items }) => {
   )
 }
 
-export default Table
+export { Table, TableHeader, TableBody, TableRow }

@@ -55,6 +55,7 @@ const FlagAvatar = styled.div`
 
 const Page = ({ data }) => {
   const [activeSet, setActiveSet] = useState('active')
+  const [period, setPeriod] = useState(30)
   const [change, setChange] = useState({})
   const { mongodbCovidCountries: res } = data
   const { stats, metadata, name } = res
@@ -183,40 +184,68 @@ const Page = ({ data }) => {
               <Heading as="h3">Statistics</Heading>
             </Box>
             <Box width={1}>
-              <Flex>
-                {dataSets.map(dataSet => (
-                  dataSet === activeSet
-                    ? (
-                      <Box
-                        key={dataSet}
-                        mr={2}
+              <Flex mt={4}>
+                <Box width={1 / 2}>
+                  <Flex>
+                    {dataSets.map(dataSet => (
+                      dataSet === activeSet
+                        ? (
+                          <Box
+                            key={dataSet}
+                            mr={2}
+                          >
+                            <Button
+                              type="button"
+                              onClick={() => setActiveSet(dataSet)}
+                            >
+                              {dataSet}
+                            </Button>
+                          </Box>
+                        )
+                        : (
+                          <Box
+                            key={dataSet}
+                            mr={2}
+                          >
+                            <Secondary
+                              type="button"
+                              onClick={() => setActiveSet(dataSet)}
+                            >
+                              {dataSet}
+                            </Secondary>
+                          </Box>
+                        )
+                    ))}
+                  </Flex>
+                </Box>
+                <Box width={1 / 2}>
+                  <Flex justifyContent="flex-end">
+                    <Box mr={2}>
+                      <Button
+                        type="button"
+                        onClick={() => setPeriod(30)}
+                        as={period !== 30 ? Secondary : Button}
                       >
-                        <Button
-                          type="button"
-                          onClick={() => setActiveSet(dataSet)}
-                        >
-                          {dataSet}
-                        </Button>
-                      </Box>
-                    )
-                    : (
-                      <Box
-                        key={dataSet}
-                        mr={2}
-                      >
-                        <Secondary
-                          type="button"
-                          onClick={() => setActiveSet(dataSet)}
-                        >
-                          {dataSet}
-                        </Secondary>
-                      </Box>
-                    )
-                ))}
+                        30 Days
+                      </Button>
+                    </Box>
+                    <Button
+                      type="button"
+                      onClick={() => setPeriod(stats.length)}
+                      as={period !== stats.length ? Secondary : Button}
+                    >
+                      All Time
+                    </Button>
+                  </Flex>
+                </Box>
               </Flex>
-              <Chart data={stats} dataSet={activeSet} />
             </Box>
           </Flex>
+          <Chart
+            data={stats}
+            dataSet={activeSet}
+            period={period}
+          />
         </Container>
       </Flex>
     </>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { rgba } from 'polished'
 import { format } from 'date-fns'
@@ -38,15 +38,20 @@ const ChartWrapper = styled.div`
   }
 `
 
-const Chart = ({ data, dataSet }) => {
+const Chart = ({ data, dataSet, period }) => {
+  const [chartData, setChartData] = useState([])
   const theme = useTheme()
-  const truncated = data.slice(data.length - 29)
 
+  useEffect(() => {
+    console.log(period)
+    setChartData(data.slice(data.length - period))
+
+  }, [period])
   return (
     <ChartWrapper>
       <ResponsiveContainer>
         <AreaChart
-          data={truncated}
+          data={chartData}
           type="monotone"
           margin={{
             top: 40,
@@ -70,8 +75,8 @@ const Chart = ({ data, dataSet }) => {
             tickMargin={15}
             tickLine={false}
             axisLine={false}
-            tickCount={3}
-            interval={2}
+            tickCount={5}
+            interval={period === 30 ? 2 : 10}
           />
           <YAxis
             dataKey={dataSet}

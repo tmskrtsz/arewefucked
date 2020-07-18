@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { format } from 'date-fns'
 import { GatsbySeo } from 'gatsby-plugin-next-seo'
+import { Link } from 'gatsby'
+import kebabCase from 'lodash/kebabCase'
 
 import {
   Hero,
@@ -14,6 +16,9 @@ import {
   Button,
   Secondary,
   Table,
+  TableHeader,
+  TableBody,
+  TableRow,
   StatsBox,
   Change
 } from '../components'
@@ -27,15 +32,18 @@ import recoveredIcon from '../images/recovered.svg'
 
 export default () => {
   const [activeSet, setActiveSet] = useState('active')
+  const [period, setPeriod] = useState(30)
   const [change, setChange] = useState({})
+
   const {
     mongodbCovidCountries: data,
-    allTop20: { nodes: top20 }
+    allTop20: { nodes: top20 },
+    allBestTop20: { nodes: topBest20 }
   } = useStaticQuery(query)
   const { stats } = data
 
   const last = stats[stats.length - 1]
-  const first = stats[stats.length - 29]
+  const first = stats[stats.length - 30]
 
   const dataSets = [
     'active',
@@ -144,8 +152,8 @@ export default () => {
           />
         </Box>
       </Flex>
-      <Flex my={4}>
-        <Box width={1}>
+      <Flex mt={4}>
+        <Box width={1 / 2}>
           <Flex>
             {dataSets.map(dataSet => (
               dataSet === activeSet
@@ -177,10 +185,37 @@ export default () => {
                 )
             ))}
           </Flex>
-          <Chart data={stats} dataSet={activeSet} />
+        </Box>
+        <Box width={1 / 2}>
+          <Flex justifyContent="flex-end">
+            <Box mr={2}>
+              <Button
+                type="button"
+                onClick={() => setPeriod(30)}
+                as={period !== 30 ? Secondary : Button}
+              >
+                30 Days
+              </Button>
+            </Box>
+            <Button
+              type="button"
+              onClick={() => setPeriod(stats.length)}
+              as={period !== stats.length ? Secondary : Button}
+            >
+              All Time
+            </Button>
+          </Flex>
         </Box>
       </Flex>
-      <Flex flexWrap="wrap" flexDirection="column">
+      <Chart
+        data={stats}
+        dataSet={activeSet}
+        period={period}
+      />
+      <Flex
+        flexDirection="column"
+        py={4}
+      >
         <Flex
           alignItems="center"
           py={4}
@@ -194,6 +229,83 @@ export default () => {
           header={['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total']}
           items={top20[0].countries}
         />
+      </Flex>
+      <Flex
+        flexDirection="column"
+        py={4}
+      >
+        <Flex pb={4} alignItems="center">
+          <Heading as="h3">Top 20 Best Performing</Heading>
+          <Box ml={2}>
+            <Heading as="h5" muted>(last 30 days)</Heading>
+          </Box>
+        </Flex>
+        <TableHeader
+          py={2}
+          px={3}
+          justifyContent="space-between"
+        >
+          <Box width={1 / 6}>
+            <span>Country</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Active</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Change</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Cases</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Recovered</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Deaths</span>
+          </Box>
+        </TableHeader>
+        <TableBody flexDirection="column">
+          {topBest20[0].countries.map(entry => (
+            <TableRow
+              key={entry.name}
+              py={3}
+              px={3}
+              alignItems="center"
+            >
+              <Box width={1 / 6}>
+                <Link to={`/${kebabCase(entry.name)}`}>
+                  <Flex alignItems="center">
+                    <img
+                      src={`https://www.countryflags.io/${ entry.iso }/shiny/64.png`}
+                      alt={`Flag of ${entry.name}`}
+                    />
+                    <strong>{entry.name}</strong>
+                  </Flex>
+                </Link>
+              </Box>
+              <Box width={[1 / 6]}>
+                <strong>{formatNumber(entry.stats[1].active)}</strong>
+              </Box>
+              <Box width={[1 / 6]}>
+                <Change criteria="positive">{entry.change}</Change>
+              </Box>
+              <Box width={[1 / 6]}>
+                {formatNumber(entry.stats[1].cases)}
+              </Box>
+              <Box width={[1 / 6]}>
+                {formatNumber(entry.stats[1].recovered)}
+              </Box>
+              <Box width={[1 / 6]}>
+                <Flex justifyContent="space-between" alignItems="center">
+                  {formatNumber(entry.stats[1].deaths)}
+                  <Secondary as={Link} to={`/${kebabCase(entry.name)}`}>
+                    More Stats
+                  </Secondary>
+                </Flex>
+              </Box>
+            </TableRow>
+          ))}
+        </TableBody>
       </Flex>
     </>
   )
@@ -236,4 +348,21 @@ export const query = graphql`
       }
     }
   }
+
+  allBestTop20 {
+    nodes {
+      countries {
+        iso
+        name
+        change
+        stats {
+          active
+          cases
+          deaths
+          recovered
+        }
+      }
+    }
+  }
+
 }`
