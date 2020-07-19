@@ -43,7 +43,6 @@ const Chart = ({ data, dataSet, period }) => {
   const theme = useTheme()
 
   useEffect(() => {
-    console.log(period)
     setChartData(data.slice(data.length - period))
 
   }, [period])

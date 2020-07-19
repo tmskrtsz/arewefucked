@@ -237,7 +237,7 @@ export default () => {
         <Flex pb={4} alignItems="center">
           <Heading as="h3">Top 20 Best Performing</Heading>
           <Box ml={2}>
-            <Heading as="h5" muted>(last 30 days)</Heading>
+            <Heading as="h5" muted>(Last 30 days)</Heading>
           </Box>
         </Flex>
         <TableHeader
@@ -249,7 +249,7 @@ export default () => {
             <span>Country</span>
           </Box>
           <Box width={1 / 6}>
-            <span>Active</span>
+            <span>Current Active</span>
           </Box>
           <Box width={1 / 6}>
             <span>Change</span>

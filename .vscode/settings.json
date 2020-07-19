@@ -4,5 +4,11 @@
     "source.fixAll.eslint": false
   },
   "eslint.validate": ["javascript", "javascriptreact"],
-  "tslint.enable": false
+  "tslint.enable": false,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    ".vscode/**": true
+  }
 }
