@@ -287,7 +287,7 @@ export default () => {
                 <strong>{formatNumber(entry.stats[1].active)}</strong>
               </Box>
               <Box width={[1 / 6]}>
-                <Change criteria="positive">{entry.change}</Change>
+                <Change criteria="positive">{parseFloat(entry.change).toFixed(2)} %</Change>
               </Box>
               <Box width={[1 / 6]}>
                 {formatNumber(entry.stats[1].cases)}
