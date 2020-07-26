@@ -178,6 +178,7 @@ function Index ({ top, world, all }) {
         >
           {['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total'].map(column => (
             <Box
+              key={column}
               width={1 / 6}
             >
               <Text
@@ -257,7 +258,7 @@ function Index ({ top, world, all }) {
                     {formatNumber(country.stats.cases)}
                   </Text>
                   <Box>
-                    <Link href="/">
+                    <Link href={`/${kebabCase(country.name)}`}>
                       <Button
                         variant="outline"
                         rightIcon="chevron-right"
