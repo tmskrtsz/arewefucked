@@ -293,6 +293,7 @@ function Index ({ top, world, all }) {
         >
           {['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total'].map(column => (
             <Box
+              key={column}
               width={1 / 6}
             >
               <Text
