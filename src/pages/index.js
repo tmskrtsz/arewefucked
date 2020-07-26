@@ -376,7 +376,7 @@ function Index ({ top, world, all }) {
                     {formatNumber(country.stats[1].cases)}
                   </Text>
                   <Box>
-                    <Link href="/">
+                    <Link href={`/${kebabCase(country.name)}`}>
                       <Button
                         variant="outline"
                         rightIcon="chevron-right"
