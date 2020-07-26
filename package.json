@@ -38,7 +38,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npx next dev",
-    "build": "npx next build"
+    "build": "npx next build && npx next export"
   },
   "repository": {
     "type": "git",
