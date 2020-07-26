@@ -1,368 +1,433 @@
-import React, { useState, useEffect } from 'react'
-import { useStaticQuery, graphql } from 'gatsby'
-import { format } from 'date-fns'
-import { GatsbySeo } from 'gatsby-plugin-next-seo'
-import { Link } from 'gatsby'
-import kebabCase from 'lodash/kebabCase'
-
+import React, { useState } from 'react'
 import {
-  Hero,
-  Container,
   Flex,
   Box,
-  Label,
-  Heading,
-  Chart,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  Badge,
   Button,
-  Secondary,
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  StatsBox,
-  Change
-} from '../components'
-import { formatNumber, percentageChange } from '../utils'
+  Heading,
+  Text,
+  Image,
+  useTheme
+} from '@chakra-ui/core'
+import kebabCase from 'lodash/kebabCase'
+import Link from 'next/link'
 
-import casesIcon from '../images/cases.svg'
-import deathsIcon from '../images/deaths.svg'
-import criticalIcon from '../images/critical.svg'
-import recoveredIcon from '../images/recovered.svg'
+import { refreshData } from '../api/refreshData'
+import { getTopActive } from '../api/getTopActive'
+import { getTopBest } from '../api/getTopBest'
+import { getWorldwide } from '../api/getWorldwide'
+import { getAllCountries } from '../api/getAllCountries'
+import { percentageChange, formatNumber } from '../utils'
 
+import { Wrapper, Chart } from '../components'
 
-export default () => {
+import ActiveIcon from '../images/cases.svg'
+import CasesIcon from '../images/critical.svg'
+import DeathsIcon from '../images/deaths.svg'
+import RecoveredIcon from '../images/recovered.svg'
+
+export const dataSets = [
+  {
+    id: 'active',
+    label: 'Active',
+    icon: <ActiveIcon />,
+  },
+  {
+    id: 'cases',
+    label: 'Confirmed Cases',
+    icon: <CasesIcon />,
+  },
+  {
+    id: 'deaths',
+    label: 'Deaths',
+    icon: <DeathsIcon />,
+  },
+  {
+    id: 'critical',
+    label: 'Critical',
+    icon: '',
+  },
+  {
+    id: 'recovered',
+    label: 'Recovered',
+    icon: <RecoveredIcon />,
+  }
+]
+
+function Index ({ top, world, all }) {
   const [activeSet, setActiveSet] = useState('active')
   const [period, setPeriod] = useState(30)
-  const [change, setChange] = useState({})
+  const theme = useTheme()
 
-  const {
-    mongodbCovidCountries: data,
-    allTop20: { nodes: top20 },
-    allBestTop20: { nodes: topBest20 }
-  } = useStaticQuery(query)
-  const { stats } = data
+  const { thirtyDaysAgo, today, change } = world
 
-  const last = stats[stats.length - 1]
-  const first = stats[stats.length - 30]
-
-  const dataSets = [
-    'active',
-    'cases',
-    'deaths',
-    'critical',
-    'recovered'
+  const periodSet = [
+    {
+      length: 30,
+      label: '30 Days',
+    },
+    {
+      length: world.data.stats.length,
+      label: 'All Time',
+    }
   ]
 
-  useEffect(() => {
-    setChange({
-      active: percentageChange(last.active, first.active),
-      cases: percentageChange(last.cases, first.cases),
-      deaths: percentageChange(last.deaths, first.deaths),
-      recovered: percentageChange(last.recovered, first.recovered)
-    })
-  }, [last, first])
-
   return (
-    <>
-      <GatsbySeo
-        title="Worldwide Statistics"
-        description="COVID-19 statistics based on the last 30 days of data"
-      />
-      <Hero>
-        <Flex
-          justifyContent="center"
-          alignItems="center"
-        >
-          <h6><Change criteria="negative">{change.active}</Change></h6>
-          <Box ml={2}>
-            <h4>increase in world active cases since {format(first.updated, 'MMMM, do')}</h4>
-          </Box>
-        </Flex>
-        <Box width={1} py={3}>
-          <h1>Yes, We’re Fucked</h1>
-        </Box>
-        <Box width={1}>
-          <h3>Stay Home</h3>
-        </Box>
-      </Hero>
-      <Flex
-        alignItems="center"
-        py={4}
-      >
-        <Heading as="h3">Total Statistics</Heading>
-        <Box ml={2}>
-          <Heading as="h5" muted>(Last 30 Days)</Heading>
-        </Box>
-      </Flex>
-      <Flex flexWrap="wrap" mx={-3}>
-        <Box width={[1 / 4]}>
-          <StatsBox
-            icon={criticalIcon}
-            label="Active"
-            stats={{
-              absolute: last.active,
-              change: change.active || '',
-              changeCriteria: 'negative'
-            }}
-            mx={3}
-            p={4}
-            pt={0}
-          />
-        </Box>
-        <Box width={[1 / 4]}>
-          <StatsBox
-            icon={casesIcon}
-            label="Confirmed Cases"
-            stats={{
-              absolute: last.cases,
-              change: change.cases || '',
-              changeCriteria: 'negative'
-            }}
-            mx={3}
-            p={4}
-            pt={0}
-          />
-        </Box>
-        <Box width={[1 / 4]}>
-          <StatsBox
-            icon={deathsIcon}
-            label="Deaths"
-            stats={{
-              absolute: last.deaths,
-              change: change.deaths || '',
-              changeCriteria: 'negative'
-            }}
-            mx={3}
-            p={4}
-            pt={0}
-          />
-        </Box>
-        <Box width={[1 / 4]}>
-          <StatsBox
-            icon={recoveredIcon}
-            label="Recovered"
-            stats={{
-              absolute: last.recovered,
-              change: change.recovered || '',
-              changeCriteria: 'positive'
-            }}
-            mx={3}
-            p={4}
-            pt={0}
-          />
-        </Box>
-      </Flex>
-      <Flex mt={4}>
-        <Box width={1 / 2}>
-          <Flex>
-            {dataSets.map(dataSet => (
-              dataSet === activeSet
-                ? (
-                  <Box
-                    key={dataSet}
-                    mr={2}
-                  >
-                    <Button
-                      type="button"
-                      onClick={() => setActiveSet(dataSet)}
-                    >
-                      {dataSet}
-                    </Button>
-                  </Box>
-                )
-                : (
-                  <Box
-                    key={dataSet}
-                    mr={2}
-                  >
-                    <Secondary
-                      type="button"
-                      onClick={() => setActiveSet(dataSet)}
-                    >
-                      {dataSet}
-                    </Secondary>
-                  </Box>
-                )
-            ))}
-          </Flex>
-        </Box>
-        <Box width={1 / 2}>
-          <Flex justifyContent="flex-end">
-            <Box mr={2}>
-              <Button
-                type="button"
-                onClick={() => setPeriod(30)}
-                as={period !== 30 ? Secondary : Button}
-              >
-                30 Days
-              </Button>
-            </Box>
-            <Button
-              type="button"
-              onClick={() => setPeriod(stats.length)}
-              as={period !== stats.length ? Secondary : Button}
+    <Wrapper allCountries={all}>
+      <Flex flexWrap="wrap">
+        {dataSets.filter(set => set.id !== 'critical')
+          .map(set => (
+            <Box
+              key={set.id}
+              width={1 / 4}
             >
-              All Time
-            </Button>
-          </Flex>
-        </Box>
+              <Stat
+                bg="#fff"
+                borderWidth="1px"
+                borderColor="gray.300"
+                m={2}
+                p={4}
+                rounded="md"
+                shadow={theme.shadows.md}
+              >
+                {set.icon}
+                <Flex
+                  alignItems="flex-end"
+                  mt={32}
+                >
+                  <Box width={1 / 2}>
+                    <StatLabel mb={1}>
+                      <Badge as="span" variantColor="purple" variant="subtle">{set.label}</Badge>
+                    </StatLabel>
+                    <StatNumber fontSize="2xl" fontWeight="700">{formatNumber(today[set.id])}</StatNumber>
+                  </Box>
+                  <Box width={1 / 2} textAlign="right">
+                    <StatHelpText>{change[set.id]}</StatHelpText>
+                  </Box>
+                </Flex>
+              </Stat>
+            </Box>
+          ))
+        }
       </Flex>
-      <Chart
-        data={stats}
-        dataSet={activeSet}
-        period={period}
-      />
-      <Flex
-        flexDirection="column"
-        py={4}
+      <Box
+        w={1180}
+        my={12}
+      >
+        <Flex>
+          <Box width={2 / 3}>
+            <Flex>
+              {dataSets.map(set => (
+                <Button
+                  key={set.id}
+                  variantColor="blue"
+                  variant={activeSet === set.id ? 'solid' : 'outline'}
+                  size="sm"
+                  mr={2}
+                  onClick={() => setActiveSet(set.id)}
+                >
+                  {set.label}
+                </Button>
+              ))}
+            </Flex>
+          </Box>
+          <Box width={1 / 3}>
+            <Flex justifyContent="flex-end">
+              {periodSet.map(set => (
+                <Box
+                  key={set.label}
+                  ml={2}
+                >
+                  <Button
+                    variantColor="gray"
+                    variant={period === set.length ? 'solid' : 'outline'}
+                    size="sm"
+                    onClick={() => setPeriod(set.length)}
+                  >
+                    {set.label}
+                  </Button>
+                </Box>
+              ))}
+            </Flex>
+          </Box>
+        </Flex>
+        <Chart
+          data={world.data.stats}
+          dataSet={activeSet}
+          period={period}
+        />
+      </Box>
+      <Box my={2}>
+        <Heading as="h2" size="lg">Most Active Cases <Badge variantColor="red">30 Days</Badge></Heading>
+      </Box>
+      <Box
+        my={8}
+        bg="#fff"
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="md"
       >
         <Flex
-          alignItems="center"
-          py={4}
+          p={4}
+          borderBottom="1px solid"
+          borderColor="gray.200"
         >
-          <Heading as="h3">Top 20 Active Cases</Heading>
-          <Box ml={2}>
-            <Heading as="h5" muted>(24 Hours)</Heading>
-          </Box>
+          {['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total'].map(column => (
+            <Box
+              width={1 / 6}
+            >
+              <Text
+                fontWeight="600"
+                color="gray.400"
+                textTransform="uppercase"
+                fontSize="sm"
+                letterSpacing="1px"
+              >
+                {column}
+              </Text>
+            </Box>
+          ))}
         </Flex>
-        <Table
-          header={['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total']}
-          items={top20[0].countries}
-        />
-      </Flex>
-      <Flex
-        flexDirection="column"
-        py={4}
-      >
-        <Flex pb={4} alignItems="center">
-          <Heading as="h3">Top 20 Best Performing</Heading>
-          <Box ml={2}>
-            <Heading as="h5" muted>(last 30 days)</Heading>
-          </Box>
-        </Flex>
-        <TableHeader
-          py={2}
-          px={3}
-          justifyContent="space-between"
-        >
-          <Box width={1 / 6}>
-            <span>Country</span>
-          </Box>
-          <Box width={1 / 6}>
-            <span>Active</span>
-          </Box>
-          <Box width={1 / 6}>
-            <span>Change</span>
-          </Box>
-          <Box width={1 / 6}>
-            <span>Cases</span>
-          </Box>
-          <Box width={1 / 6}>
-            <span>Recovered</span>
-          </Box>
-          <Box width={1 / 6}>
-            <span>Deaths</span>
-          </Box>
-        </TableHeader>
-        <TableBody flexDirection="column">
-          {topBest20[0].countries.map(entry => (
-            <TableRow
-              key={entry.name}
-              py={3}
-              px={3}
-              alignItems="center"
+        <Box>
+          {top.active.map(country => (
+            <Flex
+              key={country.iso}
+              p={4}
+              borderBottom="1px solid"
+              borderColor="gray.100"
             >
               <Box width={1 / 6}>
-                <Link to={`/${kebabCase(entry.name)}`}>
-                  <Flex alignItems="center">
-                    <img
-                      src={`https://www.countryflags.io/${ entry.iso }/shiny/64.png`}
-                      alt={`Flag of ${entry.name}`}
-                    />
-                    <strong>{entry.name}</strong>
-                  </Flex>
+                <Link href={`/${kebabCase(country.name)}`}>
+                  <a>
+                    <Flex alignItems="center">
+                      <Box mr={2}>
+                        <Image
+                          src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
+                          alt={`Flag of ${country.name}`}
+                          size="32px"
+                        />
+                      </Box>
+                      <Text
+                        fontWeight={600}
+                      >
+                        {country.name}
+                      </Text>
+                    </Flex>
+                  </a>
                 </Link>
               </Box>
-              <Box width={[1 / 6]}>
-                <strong>{formatNumber(entry.stats[1].active)}</strong>
+              <Box width={1 / 6}>
+                <Text
+                  fontWeight={600}
+                  color="gray.600"
+                >
+                  {formatNumber(country.stats.active)}
+                </Text>
               </Box>
-              <Box width={[1 / 6]}>
-                <Change criteria="positive">{entry.change}</Change>
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats.deaths)}
+                </Text>
               </Box>
-              <Box width={[1 / 6]}>
-                {formatNumber(entry.stats[1].cases)}
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats.critical)}
+                </Text>
               </Box>
-              <Box width={[1 / 6]}>
-                {formatNumber(entry.stats[1].recovered)}
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats.recovered)}
+                </Text>
               </Box>
-              <Box width={[1 / 6]}>
-                <Flex justifyContent="space-between" alignItems="center">
-                  {formatNumber(entry.stats[1].deaths)}
-                  <Secondary as={Link} to={`/${kebabCase(entry.name)}`}>
-                    More Stats
-                  </Secondary>
+              <Box width={1 / 6}>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Text
+                    color="teal.500"
+                  >
+                    {formatNumber(country.stats.cases)}
+                  </Text>
+                  <Box>
+                    <Link href="/">
+                      <Button
+                        variant="outline"
+                        rightIcon="chevron-right"
+                        size="xs"
+                        as="a"
+                        cursor="pointer"
+                      >
+                        Open
+                      </Button>
+                    </Link>
+                  </Box>
                 </Flex>
               </Box>
-            </TableRow>
+            </Flex>
           ))}
-        </TableBody>
-      </Flex>
-    </>
+        </Box>
+      </Box>
+      <Box my={2}>
+        <Heading as="h2" size="lg">Fewest Cases <Badge variantColor="green">30 Days</Badge></Heading>
+      </Box>
+      <Box
+        my={8}
+        bg="#fff"
+        border="1px solid"
+        borderColor="gray.200"
+        borderRadius="md"
+      >
+        <Flex
+          p={4}
+          borderBottom="1px solid"
+          borderColor="gray.200"
+        >
+          {['Country', 'Active', 'Deaths', 'Critical', 'Recovered', 'Total'].map(column => (
+            <Box
+              width={1 / 6}
+            >
+              <Text
+                fontWeight="600"
+                color="gray.400"
+                textTransform="uppercase"
+                fontSize="sm"
+                letterSpacing="1px"
+              >
+                {column}
+              </Text>
+            </Box>
+          ))}
+        </Flex>
+        <Box>
+          {top.best.map(country => (
+            <Flex
+              key={country.iso}
+              p={4}
+              borderBottom="1px solid"
+              borderColor="gray.100"
+            >
+              <Box width={1 / 6}>
+                <Link href={`/${kebabCase(country.name)}`}>
+                  <a>
+                    <Flex alignItems="center">
+                      <Box mr={2}>
+                        <Image
+                          src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
+                          alt={`Flag of ${country.name}`}
+                          size="32px"
+                        />
+                      </Box>
+                      <Text
+                        fontWeight={600}
+                      >
+                        {country.name}
+                      </Text>
+                    </Flex>
+                  </a>
+                </Link>
+              </Box>
+              <Box width={1 / 6}>
+                <Flex alignItems="center">
+                  <Text
+                    fontWeight={600}
+                    color="gray.600"
+                  >
+                    {formatNumber(country.stats[1].active)}
+                  </Text>
+                  <Badge ml={2} variantColor="green">{parseFloat(country.change).toFixed(2)} %</Badge>
+                </Flex>
+              </Box>
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats[1].deaths)}
+                </Text>
+              </Box>
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats[1].critical)}
+                </Text>
+              </Box>
+              <Box width={1 / 6}>
+                <Text
+                  color="gray.500"
+                >
+                  {formatNumber(country.stats[1].recovered)}
+                </Text>
+              </Box>
+              <Box width={1 / 6}>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Text
+                    color="teal.500"
+                  >
+                    {formatNumber(country.stats[1].cases)}
+                  </Text>
+                  <Box>
+                    <Link href="/">
+                      <Button
+                        variant="outline"
+                        rightIcon="chevron-right"
+                        size="xs"
+                        as="a"
+                        cursor="pointer"
+                      >
+                        Open
+                      </Button>
+                    </Link>
+                  </Box>
+                </Flex>
+              </Box>
+            </Flex>
+          ))}
+        </Box>
+      </Box>
+    </Wrapper>
   )
 }
 
-export const query = graphql`
-  query {
-    mongodbCovidCountries(name: {eq: "worldwide"}) {
-    mongodb_id
-    name
-    stats {
-      updated
-      active
-      affectedCountries
-      cases
-      casesPerOneMillion
-      critical
-      deaths
-      deathsPerOneMillion
-      tests
-      recovered
-      testsPerOneMillion
-      todayCases
-      todayDeaths
-    }
-  }
+export async function getStaticProps () {
+  await refreshData()
+  const worldData = await getWorldwide()
+  const allCountries = await getAllCountries()
 
-  allTop20 {
-    nodes {
-      countries {
-        iso
-        name
-        stats {
-          cases
-          active
-          critical
-          deaths
-          recovered
+  const last = worldData.stats[worldData.stats.length - 30]
+  const first = worldData.stats[worldData.stats.length - 1]
+
+  return {
+    props: {
+      top: {
+        ...await getTopActive(),
+        ...await getTopBest()
+      },
+      world: {
+        data: worldData,
+        thirtyDaysAgo: last,
+        today: first,
+        change: {
+          active: percentageChange(last.active, first.active),
+          cases: percentageChange(last.cases, first.cases),
+          deaths: percentageChange(last.deaths, first.deaths),
+          recovered: percentageChange(last.recovered, first.recovered)
         }
-      }
+      },
+      all: allCountries.map(entry => ({
+        name: entry.name,
+        flag: entry.flag || '',
+        iso: entry.iso || ''
+      }))
     }
   }
+}
 
-  allBestTop20 {
-    nodes {
-      countries {
-        iso
-        name
-        change
-        stats {
-          active
-          cases
-          deaths
-          recovered
-        }
-      }
-    }
-  }
-
-}`
+export default Index

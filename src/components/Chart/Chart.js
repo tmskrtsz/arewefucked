@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import styled, { useTheme } from 'styled-components'
-import { rgba } from 'polished'
+import styled from '@emotion/styled'
+import { useTheme } from '@chakra-ui/core'
 import { format } from 'date-fns'
 import {
   AreaChart,
@@ -18,22 +18,20 @@ const ChartWrapper = styled.div`
   height: 400px;
 
   .recharts-text {
-    font-weight: 600;
-    fill: ${ ({ theme }) => theme.color.grey[4] };
+    font-weight: 400;
+    font-size: 0.8rem;
+    fill: ${ ({ theme }) => theme.colors.gray[400] };
   }
-
   .recharts-default-tooltip {
-    color: ${ ({ theme }) => theme.color.white[1] };
-    box-shadow: 0 4px 12px ${ ({ theme }) => theme.color.grey[0] };
-    padding: 0.2em;
-    background-color: ${ ({ theme }) => theme.color.grey[0] } !important;
-    border: 1px solid ${ ({ theme }) => theme.color.grey[0] } !important;
-    border-radius: ${ ({ theme }) => theme.radii.md };
+    color: ${ ({ theme }) => theme.colors.gray[400] };
+    border-color: ${({ theme }) => theme.colors.gray[100] };
+    border-radius: ${({ theme }) => theme.radii.md };
+    overflow: hidden;
 
     .recharts-tooltip-item-name {
       font-size: 1.7rem;
       font-weight: 700;
-      color: ${ ({ theme }) => theme.color.white[0] };
+      color: ${ ({ theme }) => theme.colors.black[400] };
     }
   }
 `
@@ -43,7 +41,6 @@ const Chart = ({ data, dataSet, period }) => {
   const theme = useTheme()
 
   useEffect(() => {
-    console.log(period)
     setChartData(data.slice(data.length - period))
 
   }, [period])
@@ -58,16 +55,17 @@ const Chart = ({ data, dataSet, period }) => {
             right: 10,
             left: 10,
             bottom: 20
-          }}>
+          }}
+        >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={theme.color.blue[0]} stopOpacity={0.15}/>
-              <stop offset="95%" stopColor={theme.color.blue[0]} stopOpacity={0}/>
+              <stop offset="5%" stopColor={theme.colors.blue[800]} stopOpacity={0.15} />
+              <stop offset="95%" stopColor={theme.colors.blue[600]} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
             vertical={false}
-            stroke={theme.color.grey[3]}
+            stroke={theme.colors.gray[200]}
           />
           <XAxis
             dataKey="updated"
@@ -88,11 +86,9 @@ const Chart = ({ data, dataSet, period }) => {
           />
           <Tooltip
             wrapperStyle={{
-              color: theme.color.white[1],
-              boxShadow: `0 4px 12px ${theme.color.grey[0]}`,
-              padding: '0.2em',
-              backgroundColor: theme.color.grey[0],
-              border: `1px solid ${theme.color.grey[0]}`,
+              boxShadow: theme.shadows.md,
+              // backgroundColor: theme.colors.white[300],
+              borderColor: theme.colors.gray[100],
               borderRadius: theme.radii.md,
             }}
             formatter={value => ['', formatNumber(value)]}
@@ -103,10 +99,16 @@ const Chart = ({ data, dataSet, period }) => {
             separator=""
             cursor={{
               strokeWidth: 1,
-              stroke: theme.color.blue[0]
+              stroke: theme.colors.blue[400]
             }}
           />
-          <Area type='monotone' dataKey={dataSet} strokeWidth="3" stroke={theme.color.blue[0]} fill="url(#colorUv)" />
+          <Area
+            type="monotone"
+            dataKey={dataSet}
+            strokeWidth="2"
+            stroke={theme.colors.blue[400]}
+            fill="url(#colorUv)"
+          />
         </AreaChart>
       </ResponsiveContainer>
     </ChartWrapper>
