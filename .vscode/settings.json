@@ -6,6 +6,9 @@
   "eslint.validate": ["javascript", "javascriptreact"],
   "tslint.enable": false,
   "search.exclude": {
-    ".next/**": true
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    ".vscode/**": true
   }
 }

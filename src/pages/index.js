@@ -337,6 +337,35 @@ function Index () {
                   </Link>
                 </Box>
                 <Box width={1 / 6}>
+          <Box width={1 / 6}>
+            <span>Country</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Current Active</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Change</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Cases</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Recovered</span>
+          </Box>
+          <Box width={1 / 6}>
+            <span>Deaths</span>
+          </Box>
+        </TableHeader>
+        <TableBody flexDirection="column">
+          {topBest20[0].countries.map(entry => (
+            <TableRow
+              key={entry.name}
+              py={3}
+              px={3}
+              alignItems="center"
+            >
+              <Box width={1 / 6}>
+                <Link to={`/${kebabCase(entry.name)}`}>
                   <Flex alignItems="center">
                     <Text
                       fontWeight={600}
