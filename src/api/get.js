@@ -14,6 +14,6 @@ exports.get = async (endpoint, customConfig = {}) => {
         return data
       }
       return Promise.reject(data)
-
     })
 }
+

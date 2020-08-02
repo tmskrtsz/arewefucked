@@ -1,6 +1,6 @@
 // Stolen from https://gist.github.com/tobyjsullivan/96d37ca0216adee20fa95fe1c3eb56ac
 
-export function abbrNumber (value) {
+exports.abbrNumber = (value) => {
   let newValue = value
   const suffixes = ['', 'K', 'M', 'B','T']
   let suffixNum = 0

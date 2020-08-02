@@ -1,29 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { graphql } from 'gatsby'
+import React, { useState } from 'react'
 import kebabCase from 'lodash/kebabCase'
-import { GatsbySeo } from 'gatsby-plugin-next-seo'
-
 import {
-  Container,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Heading,
+  Badge,
   Flex,
   Box,
-  Chart,
-  Breadcrumbs,
+  Image,
+  useTheme,
   Button,
-  Secondary
-} from '../components'
+  StatLabel,
+  StatNumber,
+  StatHelpText
+} from '@chakra-ui/core'
+import { Link, graphql } from 'gatsby'
+import styled from '@emotion/styled'
+import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
-import { formatNumber, percentageChange } from '../utils'
+import { Wrapper, Chart } from '../components'
+import { formatNumber } from '../utils'
+import { dataSets } from '../pages'
 
 const FlagBg = styled.div`
   width: 100%;
-  height: 420px;
+  height: 548px;
   position: relative;
   overflow: hidden;
-  border-radius: ${ ({ theme }) => theme.radii.xl };
+  border-radius: 12px;
 
   &::after {
     content: '';
@@ -40,46 +45,30 @@ const FlagBg = styled.div`
   }
 `
 
-const FlagAvatar = styled.div`
-  position: relative;
-  display: inline-block;
-  border-radius: 4px;
-  width: 72px;
-
-  img {
-    z-index: 200;
-    max-width: 100%;
-    border-radius: ${ ({ theme }) => theme.radii.sm };
-  }
-`
-
-const Page = ({ data }) => {
+function Page ({ data }) {
   const [activeSet, setActiveSet] = useState('active')
   const [period, setPeriod] = useState(30)
-  const [change, setChange] = useState({})
-  const { mongodbCovidCountries: res } = data
-  const { stats, metadata, name } = res
+  const theme = useTheme()
 
-  const last = stats[stats.length - 1]
-  const first = stats[stats.length - 30]
+  const { mongodbCovidCountries: {
+    stats,
+    metadata,
+    name
+  } } = data
 
-  const dataSets = [
-    'active',
-    'cases',
-    'deaths',
-    'critical',
-    'recovered'
+  const last = stats[stats.length - 30]
+  const today = stats[stats.length - 1]
+
+  const periodSet = [
+    {
+      length: 30,
+      label: '30 Days',
+    },
+    {
+      length: stats.length,
+      label: 'All Time',
+    }
   ]
-
-  useEffect(() => {
-    setChange({
-      active: percentageChange(last.active, first.active),
-      cases: percentageChange(last.cases, first.cases),
-      deaths: percentageChange(last.deaths, first.deaths),
-      critical: percentageChange(last.critical, first.critical),
-      recovered: percentageChange(last.recovered, first.recovered)
-    })
-  }, [last, first])
 
   return (
     <>
@@ -87,167 +76,114 @@ const Page = ({ data }) => {
         title={`${name} Statistics`}
         description={`COVID-19 statistics for ${name}. Based on the last 30 days of data`}
       />
-      <Flex flexDirection="column">
-        <Box width={1}>
-          <Flex alignItems="center">
-            <Heading as="h1">{name}</Heading>
-            <Heading
-              as="span"
-              css={`
-                font-size: 2rem;
-                margin-left: 0.5em;
-                opacity: 0.4;
-              `}
-            >
-              (Last 30 Days)
-            </Heading>
-          </Flex>
-        </Box>
-        <Box pb={4}>
-          <Breadcrumbs links={[
-            {
-              name,
-              path: kebabCase(name.toLowerCase())
-            }
-          ]}
-          />
-        </Box>
-      </Flex>
-      <Box>
+      <Wrapper>
+        <Breadcrumb mb={24}>
+          <BreadcrumbItem>
+            <Link href="/">
+              <BreadcrumbLink as="a">Home</BreadcrumbLink>
+            </Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href="#">{name}</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
         <Flex flexDirection="column">
-          <FlagBg bgFlag={metadata.flag} />
+          <Badge mr="auto">Last 24 Hours</Badge>
+          <Heading as="h1" size="2xl">{name}</Heading>
         </Flex>
-      </Box>
-      <Flex
-        mt={-140}
-        mx={4}
-      >
-        <Container
-          width={1}
-          p={4}
+        <Flex
+          my={12}
+          zIndex={theme.zIndices.hide}
         >
-          <Flex
-            pb={4}
-            alignItems="center"
+          <Box w="100%" h="100%" borderRadius="2xl">
+            <FlagBg bgFlag={metadata.flag} />
+          </Box>
+        </Flex>
+        <Flex
+          mt={-420}
+          px={18}
+          pb={24}
+        >
+          <Box
+            bg="#fff"
+            w="100%"
+            border="1px solid"
+            borderColor={theme.colors.gray[200]}
+            zIndex={theme.zIndices.base}
+            borderRadius={theme.radii.lg}
+            p={8}
           >
-            <Box width={1 / 2}>
-              <FlagAvatar>
-                <img
+            <Flex
+              alignItems="center"
+              mb={4}
+            >
+              <Box width={1 / 3}>
+                <Image
                   src={metadata.flag}
-                  alt={name}
+                  alt={`Flag of ${name}`}
+                  w="64px"
+                  borderRadius={theme.radii.lg}
                 />
-              </FlagAvatar>
-            </Box>
-            <Box width={1 / 2}>
-              <Flex alignItems="center" justifyContent="flex-end">
-                <Box width={1 / 5} textAlign="center">
-                  <Heading
-                    as="h6"
-                    muted
-                  >Active</Heading>
-                  <Heading as="h5">{formatNumber(last.active)}</Heading>
-                </Box>
-                <Box width={1 / 5} textAlign="center">
-                  <Heading
-                    as="h6"
-                    muted
-                  >Cases</Heading>
-                  <Heading as="h5">{formatNumber(last.cases)}</Heading>
-                </Box>
-                <Box width={1 / 5} textAlign="center">
-                  <Heading
-                    as="h6"
-                    muted
-                  >Deaths</Heading>
-                  <Heading as="h5">{formatNumber(last.deaths)}</Heading>
-                </Box>
-                <Box width={1 / 5} textAlign="center">
-                  <Heading
-                    as="h6"
-                    muted
-                  >Critical</Heading>
-                  <Heading as="h5">{formatNumber(last.critical)}</Heading>
-                </Box>
-                <Box width={1 / 5} textAlign="center">
-                  <Heading
-                    as="h6"
-                    muted
-                  >Recovered</Heading>
-                  <Heading as="h5">{formatNumber(last.recovered)}</Heading>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
-
-          <Flex flexDirection="column">
-            <Box wdith={1} pb={4}>
-              <Heading as="h3">Statistics</Heading>
-            </Box>
-            <Box width={1}>
-              <Flex mt={4}>
-                <Box width={1 / 2}>
-                  <Flex>
-                    {dataSets.map(dataSet => (
-                      dataSet === activeSet
-                        ? (
-                          <Box
-                            key={dataSet}
-                            mr={2}
-                          >
-                            <Button
-                              type="button"
-                              onClick={() => setActiveSet(dataSet)}
-                            >
-                              {dataSet}
-                            </Button>
-                          </Box>
-                        )
-                        : (
-                          <Box
-                            key={dataSet}
-                            mr={2}
-                          >
-                            <Secondary
-                              type="button"
-                              onClick={() => setActiveSet(dataSet)}
-                            >
-                              {dataSet}
-                            </Secondary>
-                          </Box>
-                        )
-                    ))}
-                  </Flex>
-                </Box>
-                <Box width={1 / 2}>
-                  <Flex justifyContent="flex-end">
-                    <Box mr={2}>
+              </Box>
+              <Box width={2 / 3}>
+                <Flex justifyContent="space-between">
+                  {dataSets.map(set => (
+                    <Box key={set.id}>
+                      <StatLabel>
+                        <Badge as="span" variantColor="purple" variant="subtle">{set.label}</Badge>
+                      </StatLabel>
+                      <StatNumber fontSize="2xl" fontWeight="700">{formatNumber(today[set.id])}</StatNumber>
+                    </Box>
+                  ))}
+                </Flex>
+              </Box>
+            </Flex>
+            <Heading as="h3" mb={4}>Statistics</Heading>
+            <Flex>
+              <Box width={2 / 3}>
+                <Flex>
+                  {dataSets.map(set => (
+                    <Button
+                      key={set.id}
+                      variantColor="blue"
+                      variant={activeSet === set.id ? 'solid' : 'outline'}
+                      size="sm"
+                      mr={2}
+                      onClick={() => setActiveSet(set.id)}
+                    >
+                      {set.label}
+                    </Button>
+                  ))}
+                </Flex>
+              </Box>
+              <Box width={1 / 3}>
+                <Flex justifyContent="flex-end">
+                  {periodSet.map(set => (
+                    <Box
+                      key={set.label}
+                      ml={2}
+                    >
                       <Button
-                        type="button"
-                        onClick={() => setPeriod(30)}
-                        as={period !== 30 ? Secondary : Button}
+                        variantColor="gray"
+                        variant={period === set.length ? 'solid' : 'outline'}
+                        size="sm"
+                        onClick={() => setPeriod(set.length)}
                       >
-                        30 Days
+                        {set.label}
                       </Button>
                     </Box>
-                    <Button
-                      type="button"
-                      onClick={() => setPeriod(stats.length)}
-                      as={period !== stats.length ? Secondary : Button}
-                    >
-                      All Time
-                    </Button>
-                  </Flex>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
-          <Chart
-            data={stats}
-            dataSet={activeSet}
-            period={period}
-          />
-        </Container>
-      </Flex>
+                  ))}
+                </Flex>
+              </Box>
+            </Flex>
+            <Chart
+              data={stats}
+              dataSet={activeSet}
+              period={period}
+            />
+          </Box>
+        </Flex>
+      </Wrapper>
     </>
   )
 }
@@ -279,33 +215,5 @@ export const query = graphql`
     }
   }
 `
-
-Page.propTypes = {
-  data: PropTypes.shape({
-    mongodbCovidCountries: PropTypes.shape({
-      mongodb_id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      metadata: PropTypes.shape({
-        flag: PropTypes.string.isRequired,
-        iso: PropTypes.string.isRequired
-      }),
-      stats: PropTypes.shape({
-        updated: PropTypes.string.isRequired,
-        active: PropTypes.string.isRequired,
-        affectedCountries: PropTypes.string.isRequired,
-        cases: PropTypes.string.isRequired,
-        casesPerOneMillion: PropTypes.string.isRequired,
-        critical: PropTypes.string.isRequired,
-        deaths: PropTypes.string.isRequired,
-        deathsPerOneMillion: PropTypes.string.isRequired,
-        tests: PropTypes.string.isRequired,
-        recovered: PropTypes.string.isRequired,
-        testsPerOneMillion: PropTypes.string.isRequired,
-        todayCases: PropTypes.string.isRequired,
-        todayDeaths: PropTypes.string.isRequired,
-      })
-    })
-  }).isRequired
-}
 
 export default Page

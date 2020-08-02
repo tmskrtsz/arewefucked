@@ -1,4 +1,4 @@
-export function percentageChange (newNumber, oldNumber) {
+exports.percentageChange = (newNumber, oldNumber) => {
   if (typeof newNumber !== 'number'
     || typeof oldNumber !== 'number') {
     throw new Error('One of the supplied parameter is not a number.')

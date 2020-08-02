@@ -9,28 +9,25 @@ module.exports = {
     siteUrl: 'https://www.arewefucked.app'
   },
   plugins: [
-    'gatsby-plugin-react-helmet',
     {
-      resolve: 'gatsby-plugin-layout',
+      resolve: 'gatsby-plugin-chakra-ui',
       options: {
-        component: require.resolve('./src/templates/layout.js'),
-      },
+        isResettingCSS: true,
+        isUsingColorMode: false,
+      }
     },
-    'gatsby-transformer-sharp',
-    'gatsby-plugin-sharp',
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'gatsby-starter-default',
-        short_name: 'starter',
+        name: 'Are We Fucked?',
+        short_name: 'AreWeFucked',
         start_url: '/',
-        background_color: '#663399',
-        theme_color: '#663399',
-        display: 'minimal-ui',
+        background_color: '#f7f0eb',
+        theme_color: '#a2466c',
+        display: 'standalone',
+        icon: './src/images/logo.svg'
       },
     },
-    'gatsby-plugin-styled-components',
-    'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-source-mongodb',
       options: {
@@ -45,18 +42,12 @@ module.exports = {
     },
     'gatsby-plugin-next-seo',
     {
-      resolve: 'gatsby-plugin-manifest',
+      resolve: 'gatsby-plugin-react-svg',
       options: {
-        name: 'Are We Fucked?',
-        short_name: 'arewefucked',
-        start_url: '/',
-        background_color: '#222B42',
-        theme_color: '#0056FD',
-        lang: 'en',
-        display: 'minimal-ui',
-        icon: 'src/images/favicon.png'
+        rule: {
+          include: /svg-components/
+        }
       }
-    },
-    'gatsby-plugin-remove-serviceworker'
+    }
   ],
 }
