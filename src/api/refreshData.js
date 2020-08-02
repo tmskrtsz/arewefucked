@@ -1,12 +1,12 @@
-import isNull from 'lodash/isNull'
-import isToday from 'date-fns/isToday'
-import format from 'date-fns/format'
-import chalk from 'chalk'
+const isNull = require('lodash/isNull')
+const isToday = require('date-fns/isToday')
+const format = require('date-fns/format')
+const chalk = require('chalk')
 
-import { Country } from './db'
-import { get } from './get'
+const { Country } = require('./db')
+const { get } = ('./get')
 
-export async function refreshData () {
+exports.refreshData = async () => {
   // Check if the value from the database is current
   const isDataFromToday = await Country.findOne({
     name: 'worldwide'

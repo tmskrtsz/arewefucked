@@ -1,6 +1,6 @@
-import { Country } from './db'
+const { Country } = require('./db')
 
-export async function getTopActive() {
+exports.getTopActive = async () => {
   const res = await Country.find({
     name: { $not: { $eq: 'worldwide' } }
   },

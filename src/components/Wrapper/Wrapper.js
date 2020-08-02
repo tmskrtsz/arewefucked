@@ -1,15 +1,15 @@
 import React from 'react'
 import { Flex, Box, Text, useTheme } from '@chakra-ui/core'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 
 import Search from '../Search/Search'
 import Logo from '../../images/logo.svg'
 
-const Wrapper = ({ children, allCountries }) => {
+const Wrapper = ({ children }) => {
   const theme = useTheme()
 
   return (
-    <>
+    <Box bg="background">
       <Flex
         as="header"
         py={4}
@@ -28,30 +28,28 @@ const Wrapper = ({ children, allCountries }) => {
           alignItems="center"
         >
           <Box width={1 / 3}>
-            <Link href="/">
-              <a>
-                <Flex alignItems="center">
-                  <Box w="42px">
-                    <Logo />
-                  </Box>
-                  <Box ml={2}>
-                    <Text fontSize="2xl" fontWeight="700">Are We Fucked?</Text>
-                  </Box>
-                </Flex>
-              </a>
+            <Link to="/">
+              <Flex alignItems="center">
+                <Box w="42px">
+                  <img src={Logo} alt="Multicolored globe logo" />
+                </Box>
+                <Box ml={2}>
+                  <Text fontSize="2xl" fontWeight="700">Are We Fucked?</Text>
+                </Box>
+              </Flex>
             </Link>
           </Box>
           <Box width={1 / 3}>
-            <Search data={allCountries} />
+            <Search />
           </Box>
         </Flex>
       </Flex>
-      <Box w={1180} mx="auto">
-        <Box mt={100}>
+      <Box w={1180} mx="auto" py={4}>
+        <Box mt={75}>
           {children}
         </Box>
       </Box>
-    </>
+    </Box>
   )
 }
 

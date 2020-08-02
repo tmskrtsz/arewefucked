@@ -1,7 +1,7 @@
-import fetch from 'node-fetch'
+const fetch = require('node-fetch')
 
 // Fetch wrapper
-const get = async (endpoint, customConfig = {}) => {
+exports.get = async (endpoint, customConfig = {}) => {
   const config = {
     method: 'GET',
     ...customConfig,
@@ -17,4 +17,3 @@ const get = async (endpoint, customConfig = {}) => {
     })
 }
 
-export { get }

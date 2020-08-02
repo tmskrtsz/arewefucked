@@ -1,6 +1,6 @@
-import { Country } from './db'
+const { Country } = require('./db')
 
-export async function getTopBest () {
+exports.getTopBest = async () => {
   const res = await Country.find({
     name: { $not: { $eq: 'worldwide' } }
   },
@@ -9,10 +9,10 @@ export async function getTopBest () {
   const formatted = res.map(entry => ({
     name: entry.name,
     iso: entry.metadata.iso && entry.metadata.iso.toLowerCase(),
-    stats: [
-      entry.stats[0],
-      entry.stats[entry.stats.length - 1]
-    ],
+    stats: {
+      monthTodate: { ...entry.stats[0] },
+      today: { ...entry.stats[entry.stats.length - 1] }
+    },
     change: (() => {
       const old = entry.stats[0].active
       const last = entry.stats[entry.stats.length - 1].active
@@ -26,7 +26,7 @@ export async function getTopBest () {
   const sorted = formatted.sort((a, b) => a.change - b.change)
 
   const best = sorted
-    .filter(entry => entry.stats[1].cases > 1000)
+    .filter(entry => entry.stats.today.cases > 1000)
     .map(entry =>({
       ...entry,
       stats: {

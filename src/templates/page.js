@@ -11,19 +11,17 @@ import {
   Image,
   useTheme,
   Button,
-  Stat,
   StatLabel,
   StatNumber,
   StatHelpText
 } from '@chakra-ui/core'
-import Link from 'next/link'
-import Head from 'next/head'
+import { Link, graphql } from 'gatsby'
 import styled from '@emotion/styled'
+import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
-import { getAllCountries } from '../api/getAllCountries'
 import { Wrapper, Chart } from '../components'
-import { percentageChange, formatNumber } from '../utils'
-import { dataSets } from './'
+import { formatNumber } from '../utils'
+import { dataSets } from '../pages'
 
 const FlagBg = styled.div`
   width: 100%;
@@ -47,13 +45,19 @@ const FlagBg = styled.div`
   }
 `
 
-function Country ({ data, today, all }) {
+function Page ({ data }) {
   const [activeSet, setActiveSet] = useState('active')
   const [period, setPeriod] = useState(30)
   const theme = useTheme()
 
-  if (!data) return null
-  const country = data
+  const { mongodbCovidCountries: {
+    stats,
+    metadata,
+    name
+  } } = data
+
+  const last = stats[stats.length - 30]
+  const today = stats[stats.length - 1]
 
   const periodSet = [
     {
@@ -61,17 +65,18 @@ function Country ({ data, today, all }) {
       label: '30 Days',
     },
     {
-      length: country.stats.length,
+      length: stats.length,
       label: 'All Time',
     }
   ]
 
   return (
     <>
-      <Head>
-        <title>{country.name} Statistics /// Are We Fucked?</title>
-      </Head>
-      <Wrapper allCountries={all}>
+      <GatsbySeo
+        title={`${name} Statistics`}
+        description={`COVID-19 statistics for ${name}. Based on the last 30 days of data`}
+      />
+      <Wrapper>
         <Breadcrumb mb={24}>
           <BreadcrumbItem>
             <Link href="/">
@@ -79,19 +84,19 @@ function Country ({ data, today, all }) {
             </Link>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="#">{country.name}</BreadcrumbLink>
+            <BreadcrumbLink href="#">{name}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
         <Flex flexDirection="column">
           <Badge mr="auto">Last 24 Hours</Badge>
-          <Heading as="h1" size="2xl">{country.name}</Heading>
+          <Heading as="h1" size="2xl">{name}</Heading>
         </Flex>
         <Flex
           my={12}
           zIndex={theme.zIndices.hide}
         >
           <Box w="100%" h="100%" borderRadius="2xl">
-            <FlagBg bgFlag={country.flag} />
+            <FlagBg bgFlag={metadata.flag} />
           </Box>
         </Flex>
         <Flex
@@ -114,8 +119,8 @@ function Country ({ data, today, all }) {
             >
               <Box width={1 / 3}>
                 <Image
-                  src={country.flag}
-                  alt={`Flag of ${country.name}`}
+                  src={metadata.flag}
+                  alt={`Flag of ${name}`}
                   w="64px"
                   borderRadius={theme.radii.lg}
                 />
@@ -172,7 +177,7 @@ function Country ({ data, today, all }) {
               </Box>
             </Flex>
             <Chart
-              data={data.stats}
+              data={stats}
               dataSet={activeSet}
               period={period}
             />
@@ -183,47 +188,32 @@ function Country ({ data, today, all }) {
   )
 }
 
-export async function getStaticPaths () {
-  const allCountries = await getAllCountries()
-  const paths = allCountries.map(country => ({
-    params: {
-      country: kebabCase(country.name.trim())
-    }
-  }))
-
-  return {
-    paths,
-    fallback: false
-  }
-}
-
-export async function getStaticProps ({ params }) {
-  const allCountries = await getAllCountries()
-  const [getCountry] = allCountries.filter(entry => kebabCase(entry.name) === params.country)
-
-  const last = getCountry.stats[getCountry.stats.length - 30]
-  const first = getCountry.stats[getCountry.stats.length - 1]
-
-
-  return {
-    props: {
-      data: getCountry || [],
-      thirtyDaysAgo: last,
-      today: first,
-      change: {
-        active: percentageChange(last.active, first.active),
-        cases: percentageChange(last.cases, first.cases),
-        deaths: percentageChange(last.deaths, first.deaths),
-        critical: percentageChange(last.critical, first.critical),
-        recovered: percentageChange(last.recovered, first.recovered)
-      },
-      all: allCountries.map(entry => ({
-        name: entry.name,
-        flag: entry.flag || '',
-        iso: entry.iso || ''
-      }))
+export const query = graphql`
+  query($id: String!) {
+    mongodbCovidCountries(mongodb_id: { eq: $id }) {
+      mongodb_id
+      name
+      stats {
+        updated
+        active
+        affectedCountries
+        cases
+        casesPerOneMillion
+        critical
+        deaths
+        deathsPerOneMillion
+        tests
+        recovered
+        testsPerOneMillion
+        todayCases
+        todayDeaths
+      }
+      metadata {
+        flag
+        iso
+      }
     }
   }
-}
+`
 
-export default Country
+export default Page

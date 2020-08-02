@@ -9,7 +9,7 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 import kebabCase from 'lodash/kebabCase'
 import { useClickOutside } from 'react-click-outside-hook'
-import Link from 'next/link'
+import { Link, graphql, useStaticQuery } from 'gatsby'
 
 const Group = styled.div`
   display: flex;
@@ -36,7 +36,7 @@ const Dropdown = styled.div`
   border-bottom-left-radius: ${ ({ theme }) => theme.radii.sm };
   border-bottom-right-radius: ${ ({ theme }) => theme.radii.sm };
   border-top: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   span {
     padding: 0.9em 1.2em;
@@ -46,7 +46,7 @@ const Dropdown = styled.div`
 `
 
 const Result = styled.a`
-  background-color: ${ ({ theme }) => theme.colors.gray[200] };
+  background-color: ${ ({ theme }) => theme.colors.white[200] };
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -64,7 +64,8 @@ const Result = styled.a`
   }
 `
 
-const Search = ({ data }) => {
+const Search = () => {
+  const { data } = useStaticQuery(searchQuery)
   const [results, setResults] = useState([])
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(false)
@@ -72,7 +73,7 @@ const Search = ({ data }) => {
 
   useEffect(() => {
     if (query.length > 0) {
-      setResults(data.filter(el =>
+      setResults(data.nodes.filter(el =>
         el.name.toLowerCase().includes(query)
       ))
     } else {
@@ -128,9 +129,9 @@ const Search = ({ data }) => {
                   onClick={() => setActive(false)}
                 >
                   {e.name}
-                  {e.iso && (
+                  {e.metadata.iso && (
                     <img
-                      src={`https://www.countryflags.io/${ e.iso.toLowerCase() }/shiny/24.png`}
+                      src={`https://www.countryflags.io/${ e.metadata.iso.toLowerCase() }/shiny/24.png`}
                       alt={`Flag of ${e.name}`}
                     />
                   )}
@@ -143,5 +144,17 @@ const Search = ({ data }) => {
     </Group>
   )
 }
+
+export const searchQuery = graphql`
+  query {
+    data: allMongodbCovidCountries {
+    nodes {
+      name
+      metadata {
+        iso
+      }
+    }
+  }
+}`
 
 export default Search

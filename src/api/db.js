@@ -1,5 +1,8 @@
-import mongoose from 'mongoose'
-import chalk from 'chalk'
+require('dotenv').config({
+  path: '.env',
+})
+const mongoose = require('mongoose')
+const chalk = require('chalk')
 
 const { Schema } = mongoose
 
@@ -21,12 +24,9 @@ const countrySchema = Schema({
   }
 })
 
-let Country
+const Country = mongoose.model(
+  'Country',
+  countrySchema
+)
 
-try {
-  Country = mongoose.model('Country')
-} catch {
-  Country = mongoose.model('Country', countrySchema)
-}
-
-export { Country }
+module.exports = { Country }

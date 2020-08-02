@@ -1,3 +1,5 @@
-export { formatNumber } from './formatNumber'
-export { abbrNumber } from './abbrNumber'
-export { percentageChange } from './percentageChange'
+const { formatNumber } =  require('./formatNumber')
+const { abbrNumber } =  require('./abbrNumber')
+const { percentageChange } =  require('./percentageChange')
+
+module.exports = { formatNumber, abbrNumber, percentageChange }

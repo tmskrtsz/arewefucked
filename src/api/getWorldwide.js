@@ -1,6 +1,6 @@
-import { Country } from './db'
+const { Country } = require('./db')
 
-export async function getWorldwide () {
+exports.getWorldwide = async () => {
   const worldwide = await Country.find({
     name: { $eq: 'worldwide' }
   })

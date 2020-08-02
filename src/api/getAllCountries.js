@@ -1,6 +1,6 @@
-import { Country } from './db'
+const { Country } = require('./db')
 
-export async function getAllCountries () {
+exports.getAllCountries = async () => {
   const worldwide = await Country.find({
     name: { $nin: ['worldwide', 'Diamond Princess'] }
   })
