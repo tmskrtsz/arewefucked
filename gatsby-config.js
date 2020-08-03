@@ -40,7 +40,13 @@ module.exports = {
         }
       },
     },
-    'gatsby-plugin-next-seo',
+    {
+      resolve: 'gatsby-plugin-next-seo',
+      options: {
+        titleTemplate: '%s /// Are We Fucked?',
+        language: 'en',
+      }
+    },
     {
       resolve: 'gatsby-plugin-react-svg',
       options: {

@@ -52,10 +52,10 @@ exports.sourceNodes = async ({
       monthAgo: last,
       today: first,
       change: {
-        active: percentageChange(last.active, first.active),
-        cases: percentageChange(last.cases, first.cases),
-        deaths: percentageChange(last.deaths, first.deaths),
-        recovered: percentageChange(last.recovered, first.recovered)
+        active: percentageChange(first.active, last.active),
+        cases: percentageChange(first.cases, last.cases),
+        deaths: percentageChange(first.deaths, last.deaths),
+        recovered: percentageChange(first.recovered, last.recovered)
       }
     }
   }

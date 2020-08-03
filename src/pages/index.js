@@ -79,8 +79,12 @@ function Index () {
   return (
     <>
       <GatsbySeo
-        title="Worldwide Statistics"
+        title="Worldwide COVID-19 Statistics"
         description="COVID-19 statistics based on the last 30 days of data"
+        openGraph={{
+          title: 'Worldwide COVID-19 Statistics',
+          description: 'COVID-19 statistics based on the last 30 days of data'
+        }}
       />
       <Wrapper>
         <Flex flexWrap="wrap">
