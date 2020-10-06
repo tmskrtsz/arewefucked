@@ -15,6 +15,7 @@ exports.refreshData = async () => {
   const { updated: time } = isDataFromToday.stats[isDataFromToday.stats.length - 1]
 
   if (isToday(time)) {
+    console.log('Records are up-to-date.')
     return
   }
 
@@ -27,7 +28,7 @@ exports.refreshData = async () => {
     }
   ]
 
-  await data.forEach(async country => {
+  data.forEach(async country => {
     // Pull the data out
     const {
       country: countryName,
