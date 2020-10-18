@@ -13,6 +13,7 @@
     "emotion-theming": "^10.0.27",
     "gatsby": "^2.24.12",
     "gatsby-plugin-chakra-ui": "^0.1.4",
+    "gatsby-plugin-heap": "^1.1.0",
     "gatsby-plugin-manifest": "^2.4.21",
     "gatsby-plugin-next-seo": "^1.6.0",
     "gatsby-plugin-react-helmet": "^3.3.10",

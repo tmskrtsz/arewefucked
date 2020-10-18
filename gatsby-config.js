@@ -54,6 +54,12 @@ module.exports = {
           include: /svg-components/
         }
       }
+    },
+    {
+      resolve: 'gatsby-plugin-heap',
+      options: {
+        appId: process.env.HEAP
+      }
     }
   ],
 }
