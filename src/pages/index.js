@@ -18,7 +18,7 @@ import { Link, graphql, useStaticQuery } from 'gatsby'
 import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
 import { formatNumber } from '../utils'
-import { Wrapper, Chart } from '../components'
+import { Wrapper, Chart, Hero } from '../components'
 
 import ActiveIcon from '../images/svg-components/cases.svg'
 import CasesIcon from '../images/svg-components/critical.svg'
@@ -87,6 +87,7 @@ function Index () {
         }}
       />
       <Wrapper>
+        <Hero />
         <Flex flexWrap="wrap">
           {dataSets.filter(set => set.id !== 'critical')
             .map(set => (
