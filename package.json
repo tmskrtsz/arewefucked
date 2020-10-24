@@ -6,7 +6,7 @@
   "author": "Tamas Kertesz <tamas@tuta.io>",
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
-    "@emotion/core": "^10.0.28",
+    "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "chalk": "^4.0.0",
     "date-fns": "^2.13.0",
