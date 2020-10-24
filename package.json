@@ -21,7 +21,7 @@
     "gatsby-source-mongodb": "^2.3.10",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.14",
-    "polished": "^3.6.3",
+    "polished": "^4.0.3",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-click-outside-hook": "^1.1.1",
