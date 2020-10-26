@@ -27,7 +27,7 @@
     "react-click-outside-hook": "^1.1.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",
-    "react-helmet-async": "^1.0.6",
+    "react-helmet-async": "^1.0.7",
     "react-particles-js": "^3.4.0",
     "recharts": "^1.8.5",
     "reflexbox": "^4.0.6"
