@@ -11,7 +11,7 @@
     "chalk": "^4.1.0",
     "date-fns": "^2.13.0",
     "emotion-theming": "^10.0.27",
-    "gatsby": "^2.24.80",
+    "gatsby": "^2.24.87",
     "gatsby-plugin-chakra-ui": "^0.1.4",
     "gatsby-plugin-heap": "^1.1.0",
     "gatsby-plugin-manifest": "^2.4.35",
