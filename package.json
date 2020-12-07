@@ -20,7 +20,7 @@
     "gatsby-plugin-react-svg": "^3.0.0",
     "gatsby-source-mongodb": "^2.3.12",
     "lodash": "^4.17.15",
-    "mongoose": "^5.10.12",
+    "mongoose": "^5.11.4",
     "polished": "^3.6.3",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
