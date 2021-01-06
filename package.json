@@ -16,7 +16,7 @@
     "gatsby-plugin-heap": "^1.1.0",
     "gatsby-plugin-manifest": "^2.5.2",
     "gatsby-plugin-next-seo": "^1.6.1",
-    "gatsby-plugin-react-helmet": "^3.3.14",
+    "gatsby-plugin-react-helmet": "^3.8.0",
     "gatsby-plugin-react-svg": "^3.0.0",
     "gatsby-source-mongodb": "^2.3.12",
     "lodash": "^4.17.15",
