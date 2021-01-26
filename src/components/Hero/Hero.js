@@ -41,6 +41,11 @@ const Hero = () => {
     data.stats[data.stats.length - 2].active
   ).toLocaleString()
 
+  function isDireSituation(num) {
+    const toNumber = parseInt(num.split(',').join(''))
+    return Math.sign(toNumber) < 0 ? 'No' : 'Yes'
+  }
+
   return (
     <Flex
       backgroundImage="linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)"
@@ -65,7 +70,7 @@ const Hero = () => {
         color="white"
         textShadow="0 2px 3px rgba(0,0,0,0.15)"
       >
-        {show ? `24h Cases: ${change}` : 'Yes'}
+        {show ? `24h Cases: ${change}` : isDireSituation(change)}
       </Text>
     </Flex>
   )
