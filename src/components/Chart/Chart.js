@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
-import { useTheme } from '@chakra-ui/core'
+import { useTheme } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import {
   AreaChart,
@@ -69,12 +69,12 @@ const Chart = ({ data, dataSet, period }) => {
           />
           <XAxis
             dataKey="updated"
-            tickFormatter={date => format(date, 'MMMM, do')}
+            tickFormatter={date => period === 30 ? format(date, 'MMMM, do') : format(date, 'MMMM, do, yyyy')}
             tickMargin={15}
             tickLine={false}
             axisLine={false}
             tickCount={5}
-            interval={period === 30 ? 2 : 10}
+            interval={period === 30 ? 2 : 50}
           />
           <YAxis
             dataKey={dataSet}
@@ -87,7 +87,6 @@ const Chart = ({ data, dataSet, period }) => {
           <Tooltip
             wrapperStyle={{
               boxShadow: theme.shadows.md,
-              // backgroundColor: theme.colors.white[300],
               borderColor: theme.colors.gray[100],
               borderRadius: theme.radii.md,
             }}

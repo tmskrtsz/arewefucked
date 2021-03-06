@@ -11,8 +11,10 @@ import {
   Heading,
   Text,
   Image,
-  useTheme
-} from '@chakra-ui/core'
+  useTheme,
+  StatArrow
+} from '@chakra-ui/react'
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import kebabCase from 'lodash/kebabCase'
 import { Link, graphql, useStaticQuery } from 'gatsby'
 import { GatsbySeo } from 'gatsby-plugin-next-seo'
@@ -25,7 +27,7 @@ import CasesIcon from '../images/svg-components/critical.svg'
 import DeathsIcon from '../images/svg-components/deaths.svg'
 import RecoveredIcon from '../images/svg-components/recovered.svg'
 
-export const dataSets = [
+const dataSet = [
   {
     id: 'active',
     label: 'Active',
@@ -53,7 +55,7 @@ export const dataSets = [
   }
 ]
 
-function Index () {
+export default function Index () {
   const {
     world,
     activeTop20: { active },
@@ -89,7 +91,7 @@ function Index () {
       <Wrapper>
         <Hero />
         <Flex flexWrap="wrap">
-          {dataSets.filter(set => set.id !== 'critical')
+          {dataSet.filter(set => set.id !== 'critical')
             .map(set => (
               <Box
                 key={set.id}
@@ -109,14 +111,16 @@ function Index () {
                     alignItems="flex-end"
                     mt={32}
                   >
-                    <Box width={1 / 2}>
+                    <Box>
                       <StatLabel mb={1}>
-                        <Badge as="span" variantColor="purple" variant="subtle">{set.label}</Badge>
+                        <Badge as="span" colorScheme="purple" variant="subtle">{set.label}</Badge>
                       </StatLabel>
                       <StatNumber fontSize="2xl" fontWeight="700">{formatNumber(monthToDate.today[set.id])}</StatNumber>
                     </Box>
-                    <Box width={1 / 2} textAlign="right">
-                      <StatHelpText>{monthToDate.change[set.id]}</StatHelpText>
+                    <Box ml="auto" textAlign="right">
+                      <StatHelpText>{monthToDate.change[set.id]}
+                      <StatArrow type={Math.sign(parseInt(monthToDate.change[set.id])) < 0 ? 'decrease' : 'increase'} />
+                    </StatHelpText>
                     </Box>
                   </Flex>
                 </Stat>
@@ -131,10 +135,10 @@ function Index () {
           <Flex>
             <Box width={2 / 3}>
               <Flex>
-                {dataSets.map(set => (
+                {dataSet.map(set => (
                   <Button
                     key={set.id}
-                    variantColor="blue"
+                    colorScheme="blue"
                     variant={activeSet === set.id ? 'solid' : 'outline'}
                     size="sm"
                     mr={2}
@@ -153,7 +157,7 @@ function Index () {
                     ml={2}
                   >
                     <Button
-                      variantColor="gray"
+                      colorScheme="gray"
                       variant={period === set.length ? 'solid' : 'outline'}
                       size="sm"
                       onClick={() => setPeriod(set.length)}
@@ -172,7 +176,7 @@ function Index () {
           />
         </Box>
         <Box my={2}>
-          <Heading as="h2" size="lg">Most Active Cases <Badge variantColor="red">30 Days</Badge></Heading>
+          <Heading as="h2" size="lg">Most Active Cases <Badge colorScheme="red">30 Days</Badge></Heading>
         </Box>
         <Box
           my={8}
@@ -210,6 +214,7 @@ function Index () {
                 p={4}
                 borderBottom="1px solid"
                 borderColor="gray.100"
+                alignItems="center"
               >
                 <Box width={1 / 6}>
                   <Link to={`/${kebabCase(country.name)}`}>
@@ -218,7 +223,7 @@ function Index () {
                         <Image
                           src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
                           alt={`Flag of ${country.name}`}
-                          size="32px"
+                          boxSize="32px"
                         />
                       </Box>
                       <Text
@@ -270,7 +275,7 @@ function Index () {
                         as={Link}
                         to={`/${kebabCase(country.name)}`}
                         variant="outline"
-                        rightIcon="chevron-right"
+                        rightIcon={<ChevronRightIcon />}
                         size="xs"
                         cursor="pointer"
                       >
@@ -284,7 +289,7 @@ function Index () {
           </Box>
         </Box>
         <Box my={2}>
-          <Heading as="h2" size="lg">Fewest Cases <Badge variantColor="green">30 Days</Badge></Heading>
+          <Heading as="h2" size="lg">Fewest Cases <Badge colorScheme="green">30 Days</Badge></Heading>
         </Box>
         <Box
           my={8}
@@ -322,6 +327,7 @@ function Index () {
                 p={4}
                 borderBottom="1px solid"
                 borderColor="gray.100"
+                alignItems="center"
               >
                 <Box width={1 / 6}>
                   <Link to={`/${kebabCase(country.name)}`}>
@@ -330,7 +336,7 @@ function Index () {
                         <Image
                           src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
                           alt={`Flag of ${country.name}`}
-                          size="32px"
+                          boxSize="32px"
                         />
                       </Box>
                       <Text
@@ -349,7 +355,7 @@ function Index () {
                     >
                       {formatNumber(country.stats.today.active)}
                     </Text>
-                    <Badge ml={2} variantColor="green">{parseFloat(country.change).toFixed(2)} %</Badge>
+                    <Badge ml={2} colorScheme="green">{parseFloat(country.change).toFixed(2)} %</Badge>
                   </Flex>
                 </Box>
                 <Box width={1 / 6}>
@@ -385,7 +391,7 @@ function Index () {
                         as={Link}
                         to={`/${kebabCase(country.name)}`}
                         variant="outline"
-                        rightIcon="chevron-right"
+                        rightIcon={<ChevronRightIcon />}
                         size="xs"
                         cursor="pointer"
                       >
@@ -482,4 +488,3 @@ export const query = graphql`
   }
 }`
 
-export default Index

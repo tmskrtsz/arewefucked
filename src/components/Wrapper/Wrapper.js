@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Box, Text, useTheme } from '@chakra-ui/core'
+import { Flex, Box, Text, useTheme } from '@chakra-ui/react'
 import { Link } from 'gatsby'
 
 import Search from '../Search/Search'
@@ -9,7 +9,7 @@ const Wrapper = ({ children }) => {
   const theme = useTheme()
 
   return (
-    <Box bg="background">
+    <Box bg="gray.50">
       <Flex
         as="header"
         py={4}

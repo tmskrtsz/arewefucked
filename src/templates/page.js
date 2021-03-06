@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import kebabCase from 'lodash/kebabCase'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,19 +8,42 @@ import {
   Flex,
   Box,
   Image,
-  useTheme,
   Button,
+  Stat,
   StatLabel,
   StatNumber,
   StatHelpText
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import { Link, graphql } from 'gatsby'
 import styled from '@emotion/styled'
 import { GatsbySeo } from 'gatsby-plugin-next-seo'
 
 import { Wrapper, Chart } from '../components'
 import { formatNumber } from '../utils'
-import { dataSets } from '../pages'
+
+export const dataSet = [
+  {
+    id: 'active',
+    label: 'Active',
+  },
+  {
+    id: 'cases',
+    label: 'Confirmed Cases',
+  },
+  {
+    id: 'deaths',
+    label: 'Deaths',
+  },
+  {
+    id: 'critical',
+    label: 'Critical',
+  },
+  {
+    id: 'recovered',
+    label: 'Recovered',
+  }
+]
+
 
 const FlagBg = styled.div`
   width: 100%;
@@ -48,7 +70,6 @@ const FlagBg = styled.div`
 function Page ({ data }) {
   const [activeSet, setActiveSet] = useState('active')
   const [period, setPeriod] = useState(30)
-  const theme = useTheme()
 
   const { mongodbCovidCountries: {
     stats,
@@ -93,7 +114,7 @@ function Page ({ data }) {
         </Flex>
         <Flex
           my={12}
-          zIndex={theme.zIndices.hide}
+          zIndex="hide"
         >
           <Box w="100%" h="100%" borderRadius="2xl">
             <FlagBg bgFlag={metadata.flag} />
@@ -108,9 +129,9 @@ function Page ({ data }) {
             bg="#fff"
             w="100%"
             border="1px solid"
-            borderColor={theme.colors.gray[200]}
-            zIndex={theme.zIndices.base}
-            borderRadius={theme.radii.lg}
+            borderColor="gray.200"
+            zIndex="base"
+            borderRadius="lg"
             p={8}
           >
             <Flex
@@ -122,17 +143,19 @@ function Page ({ data }) {
                   src={metadata.flag}
                   alt={`Flag of ${name}`}
                   w="64px"
-                  borderRadius={theme.radii.lg}
+                  borderRadius="lg"
                 />
               </Box>
               <Box width={2 / 3}>
                 <Flex justifyContent="space-between">
-                  {dataSets.map(set => (
+                  {dataSet.map(set => (
                     <Box key={set.id}>
-                      <StatLabel>
-                        <Badge as="span" variantColor="purple" variant="subtle">{set.label}</Badge>
-                      </StatLabel>
-                      <StatNumber fontSize="2xl" fontWeight="700">{formatNumber(today[set.id])}</StatNumber>
+                      <Stat>
+                        <StatLabel>
+                          <Badge as="span" colorScheme="purple" variant="subtle">{set.label}</Badge>
+                        </StatLabel>
+                        <StatNumber fontSize="2xl" fontWeight="bold">{formatNumber(today[set.id])}</StatNumber>
+                      </Stat>
                     </Box>
                   ))}
                 </Flex>
@@ -142,10 +165,10 @@ function Page ({ data }) {
             <Flex>
               <Box width={2 / 3}>
                 <Flex>
-                  {dataSets.map(set => (
+                  {dataSet.map(set => (
                     <Button
                       key={set.id}
-                      variantColor="blue"
+                      colorScheme="blue"
                       variant={activeSet === set.id ? 'solid' : 'outline'}
                       size="sm"
                       mr={2}
@@ -164,7 +187,7 @@ function Page ({ data }) {
                       ml={2}
                     >
                       <Button
-                        variantColor="gray"
+                        colorScheme="gray"
                         variant={period === set.length ? 'solid' : 'outline'}
                         size="sm"
                         onClick={() => setPeriod(set.length)}

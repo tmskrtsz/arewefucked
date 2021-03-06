@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Flex, Text, PseudoBox } from '@chakra-ui/core'
+import { Flex, Box, Text } from '@chakra-ui/react'
 import { graphql, useStaticQuery } from 'gatsby'
 import Particles from 'react-particles-js'
 import { percentageChange } from '../../utils/percentageChange'
@@ -61,9 +61,9 @@ const Hero = () => {
       onMouseLeave={() => setShow(false)}
       onFocus={() => ''}
     >
-      <PseudoBox position="absolute" left="0" top="0">
+      <Box position="absolute" left="0" top="0">
         {show ? <Particles params={params} /> : null }
-      </PseudoBox>
+      </Box>
       <Text
         fontSize="5xl"
         fontWeight="700"

@@ -4,9 +4,9 @@ import {
   Icon,
   InputGroup,
   InputLeftElement
-} from '@chakra-ui/core'
+} from '@chakra-ui/react'
 import styled from '@emotion/styled'
-import { css } from '@emotion/core'
+import { css } from '@emotion/css'
 import kebabCase from 'lodash/kebabCase'
 import { useClickOutside } from 'react-click-outside-hook'
 import { Link, graphql, useStaticQuery } from 'gatsby'
@@ -114,6 +114,7 @@ const Search = () => {
           placeholder="Search for a country"
           onChange={getInput}
           onClick={() => setActive(!active)}
+          autoComplete={false}
         />
       </InputGroup>
       {active && (
