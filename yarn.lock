@@ -1451,12 +1451,19 @@
   dependencies:
     "@chakra-ui/utils" "1.3.0"
 
-"@chakra-ui/icons@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.6.tgz#74add5bfedb39c49a76f320062cbadfeadd31604"
-  integrity sha512-r2jZQ7DOGKWMOpWF2LXapn60brSSmenRwBC/1pj/vqWB8XQcgx74QB+ZsYsOUrRnlM83xpay9S6D8mv/m4cdzw==
+"@chakra-ui/icon@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icon/-/icon-1.1.5.tgz#f37abe47fd176a4c291d2037df2d6ed480622c09"
+  integrity sha512-VCzR1L3CJlAxp0IilqCdsF9O/Nncp9Sb2ndQvnQcfbo0GEgQmsH2CBQnmlwnClBQGYhwi6srP9GErYg8ah9LQw==
   dependencies:
-    "@chakra-ui/icon" "1.1.2"
+    "@chakra-ui/utils" "1.5.1"
+
+"@chakra-ui/icons@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.9.tgz#3551805b156c4a69b324fce22504ca5288da72e4"
+  integrity sha512-taZ7IPwDZ1aZcR+dgvT3ZcVjCULNLAa5wmQHLd9KChIZRo3EL37YSUsOroY4ju+8zvC3aX2F0Ui/VGVNFor36A==
+  dependencies:
+    "@chakra-ui/icon" "1.1.5"
     "@types/react" "^17.0.0"
 
 "@chakra-ui/image@1.0.8":
@@ -1800,6 +1807,15 @@
   dependencies:
     "@types/lodash.mergewith" "4.6.6"
     "@types/object-assign" "4.0.30"
+    css-box-model "1.2.1"
+    lodash.mergewith "4.6.2"
+
+"@chakra-ui/utils@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.5.1.tgz#a01fd14f6d948a13c2644cfa844f410299135ffc"
+  integrity sha512-J8P9wA96Kaxu4oHh+8s1rEL2VABWK/io8sBck19eOXKfVXJ55KyVwGZTrsVID0No43b7WzJx6n/xsMKkn39Peg==
+  dependencies:
+    "@types/lodash.mergewith" "4.6.6"
     css-box-model "1.2.1"
     lodash.mergewith "4.6.2"
 
@@ -2571,15 +2587,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
-  version "16.9.55"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.55.tgz#47078587f5bfe028a23b6b46c7b94ac0d436acff"
-  integrity sha512-6KLe6lkILeRwyyy7yG9rULKJ0sXplUsl98MGoCfpteXf9sPWFWWMknDcsvubcpaTdBuxtsLF6HDUwdApZL/xIg==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^3.0.2"
-
-"@types/react@^17.0.0", "@types/react@^17.0.2":
+"@types/react@*", "@types/react@^17.0.0", "@types/react@^17.0.2":
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
   integrity sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==
