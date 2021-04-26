@@ -13,7 +13,7 @@
     "@emotion/styled": "^11.1.5",
     "chalk": "^4.1.0",
     "date-fns": "^2.19.0",
-    "framer-motion": "^3.10.0",
+    "framer-motion": "^4.1.9",
     "gatsby": "^3.0.3",
     "gatsby-plugin-heap": "^1.1.0",
     "gatsby-plugin-manifest": "^3.0.0",
