@@ -20,7 +20,7 @@
     "gatsby-plugin-next-seo": "^1.7.0",
     "gatsby-plugin-react-helmet": "^4.0.0",
     "gatsby-plugin-react-svg": "^3.0.0",
-    "gatsby-source-mongodb": "^3.0.0",
+    "gatsby-source-mongodb": "^3.12.0",
     "lodash": "^4.17.21",
     "mongoose": "^5.11.19",
     "polished": "^4.1.1",
