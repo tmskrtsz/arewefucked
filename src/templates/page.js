@@ -21,7 +21,7 @@ import { GatsbySeo } from 'gatsby-plugin-next-seo'
 import { Wrapper, Chart } from '../components'
 import { formatNumber } from '../utils'
 
-export const dataSet = [
+const dataSet = [
   {
     id: 'active',
     label: 'Active',

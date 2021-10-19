@@ -20,9 +20,9 @@ exports.refreshData = async () => {
   }
 
   const data = [
-    ...(await get('https://corona.lmao.ninja/v2/countries')),
+    ...(await get(`${process.env.API}/countries`)),
     {
-      ...(await get('https://corona.lmao.ninja/v2/all')),
+      ...(await get(`${process.env.API}/all`)),
       country: 'worldwide',
       countryInfo: { iso2: 'worldwide' }
     }

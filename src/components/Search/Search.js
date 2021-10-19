@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
   Input,
-  Icon,
   InputGroup,
   InputLeftElement
 } from '@chakra-ui/react'
@@ -10,6 +9,7 @@ import { css } from '@emotion/css'
 import kebabCase from 'lodash/kebabCase'
 import { useClickOutside } from 'react-click-outside-hook'
 import { Link, graphql, useStaticQuery } from 'gatsby'
+import { SearchIcon } from '@chakra-ui/icons'
 
 const Group = styled.div`
   display: flex;
@@ -105,7 +105,7 @@ const Search = () => {
       </label>
       <InputGroup w="100%">
         <InputLeftElement
-          children={<Icon name="search" color="gray.300" />}
+          children={<SearchIcon color="gray.300" />}
         />
         <Input
           w="100%"

@@ -74,7 +74,7 @@ const Chart = ({ data, dataSet, period }) => {
             tickLine={false}
             axisLine={false}
             tickCount={5}
-            interval={period === 30 ? 2 : 50}
+            interval={period === 30 ? 3 : 100}
           />
           <YAxis
             dataKey={dataSet}

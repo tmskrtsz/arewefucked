@@ -61,6 +61,34 @@ exports.sourceNodes = async ({
   }
 
   createGQLNode(context, monthToDate)
+
+  const allCountries = await getAllCountries()
+
+  const weekToDateChange = {
+    label: 'weekToDateChange',
+    name: 'WeekToDateChange',
+    payload: {
+      stats: allCountries.map(country => {
+        const range = country.stats.slice(-7)
+
+        return {
+          name: country.name,
+          change: {
+            ...range.reduce((acc, current, idx) => idx !== 0 && ({
+              [idx]: {
+                active: current.active - acc.active,
+                cases: current.cases - acc.cases,
+                deaths: current.deaths - acc.deaths,
+                recovered: current.recovered - acc.recovered,
+              }
+            }))
+          }
+        }
+      })
+    }
+  }
+
+  createGQLNode(context, weekToDateChange)
 }
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
