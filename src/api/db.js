@@ -6,11 +6,7 @@ const chalk = require('chalk')
 
 const { Schema } = mongoose
 
-mongoose.connect(`${process.env.ATLAS_URI}/covid?retryWrites=true&w=majority`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-})
+mongoose.connect(`${process.env.ATLAS_URI}/covid`)
   .then(() => console.log(`${chalk.green('success')} connected to MongoDB at ${ process.env.ATLAS_URI }`))
   .catch(e => console.warn(`Connection to MongoDB close: ${ e }`))
 

@@ -221,9 +221,9 @@ export default function Index () {
                     <Flex alignItems="center">
                       <Box mr={2}>
                         <Image
-                          src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
+                          src={`https://corona.lmao.ninja/assets/img/flags/${ country.iso }.png`}
                           alt={`Flag of ${country.name}`}
-                          boxSize="32px"
+                          width="30px"
                         />
                       </Box>
                       <Text
@@ -334,9 +334,9 @@ export default function Index () {
                     <Flex alignItems="center">
                       <Box mr={2}>
                         <Image
-                          src={`https://www.countryflags.io/${ country.iso }/shiny/64.png`}
+                          src={`https://corona.lmao.ninja/assets/img/flags/${ country.iso }.png`}
                           alt={`Flag of ${country.name}`}
-                          boxSize="32px"
+                          width="30px"
                         />
                       </Box>
                       <Text
